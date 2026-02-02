@@ -27,10 +27,12 @@ struct Program_configuration final
 {
     Program_configuration()
     {
-        Gedim::Configurations::AddProperty("TestType",
-                                           static_cast<unsigned int>(Polydim::examples::Elliptic_Extended_PCC_2D::test::Test_Types::Patch_Test),
-                                           "Test Type 1 - Patch_Test; 2 - Elliptic_Polynomial_Problem; 3 - Elliptic_Problem; 4 - Patch_Test_Rotated; 5 - DFN_Frac_3 "
-                                           "(Default: 1)");
+        Gedim::Configurations::AddProperty(
+            "TestType",
+            static_cast<unsigned int>(Polydim::examples::Elliptic_Extended_PCC_2D::test::Test_Types::Patch_Test),
+            "Test Type 1 - Patch_Test; 2 - Elliptic_Polynomial_Problem; 3 - Elliptic_Problem; 4 - Patch_Test_Rotated; "
+            "5 - DFN_Frac_3 "
+            "(Default: 1)");
         // Export parameters
         Gedim::Configurations::AddProperty("ExportFolder", "./Run", "Folder where to export data (Default: ./Export)");
         // Mesh parameters

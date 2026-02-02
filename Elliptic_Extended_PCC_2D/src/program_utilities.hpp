@@ -26,27 +26,32 @@ namespace Elliptic_Extended_PCC_2D
 namespace program_utilities
 {
 
-std::unique_ptr<Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test> create_test(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config);
+std::unique_ptr<Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test> create_test(
+    const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config);
 
 void export_domains(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
-                        const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
-                    const std::string& export_folder);
+                    const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
+                    const std::string &export_folder);
 
 void create_domain_mesh(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
                         const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
                         Gedim::MeshMatricesDAO &mesh);
 
-PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D create_domain_mesh_geometric_properties(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config, const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection& domains,
-                                                                                                         const Gedim::MeshMatricesDAO &mesh);
+PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D create_domain_mesh_geometric_properties(
+    const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
+    const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
+    const Gedim::MeshMatricesDAO &mesh);
 
 void export_domain_mesh(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
                         const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
                         const Gedim::MeshMatricesDAO &mesh,
                         const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
-                        const std::string& export_folder);
+                        const std::string &export_folder);
 
-void export_solution(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config, const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection& domains,
-                     const Gedim::MeshMatricesDAO &mesh, const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D& mesh_geometric_data,
+void export_solution(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
+                     const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
+                     const Gedim::MeshMatricesDAO &mesh,
+                     const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
                      const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
                      const Polydim::examples::Elliptic_Extended_PCC_2D::Assembler::Elliptic_Extended_PCC_2D_Problem_Data &assembler_data,
                      const Polydim::examples::Elliptic_Extended_PCC_2D::Assembler::PostProcess_Data &post_process_data,
