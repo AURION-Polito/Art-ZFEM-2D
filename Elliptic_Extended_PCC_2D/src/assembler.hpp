@@ -69,11 +69,11 @@ class Assembler final
     };
 
   private:
-    void ComputeStrongTerm(const Gedim::GeometryUtilities& geometry_utilities,
+    void ComputeStrongTerm(const Gedim::GeometryUtilities &geometry_utilities,
                            const unsigned int cell2D_index,
                            const unsigned int cell2D_domain_position,
-                           const Eigen::Matrix3d& domain_rotation,
-                           const Eigen::Vector3d& domain_translation,
+                           const Eigen::Matrix3d &domain_rotation,
+                           const Eigen::Vector3d &domain_translation,
                            const Gedim::MeshMatricesDAO &mesh,
                            const Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo &mesh_dofs_info,
                            const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
@@ -82,11 +82,11 @@ class Assembler final
                            const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test,
                            Elliptic_Extended_PCC_2D_Problem_Data &assembler_data) const;
 
-    void ComputeWeakTerm(const Gedim::GeometryUtilities& geometry_utilities,
+    void ComputeWeakTerm(const Gedim::GeometryUtilities &geometry_utilities,
                          const unsigned int cell2DIndex,
                          const unsigned int cell2D_domain_position,
-                         const Eigen::Matrix3d& domain_rotation,
-                         const Eigen::Vector3d& domain_translation,
+                         const Eigen::Matrix3d &domain_rotation,
+                         const Eigen::Vector3d &domain_translation,
                          const Gedim::MeshMatricesDAO &mesh,
                          const Gedim::MeshUtilities::MeshGeometricData2D &mesh_geometric_data,
                          const Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo &mesh_dofs_info,
@@ -100,12 +100,12 @@ class Assembler final
     Elliptic_Extended_PCC_2D_Problem_Data Assemble(
         const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
         const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
-                                          const Gedim::MeshMatricesDAO &mesh,
-                                          const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
-                                          const Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo &mesh_dofs_info,
-                                          const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
-                                          const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
-                                          const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test) const;
+        const Gedim::MeshMatricesDAO &mesh,
+        const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
+        const Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo &mesh_dofs_info,
+        const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
+        const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
+        const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test) const;
 
     Performance_Data ComputePerformance(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
                                         const Gedim::MeshMatricesDAO &mesh,

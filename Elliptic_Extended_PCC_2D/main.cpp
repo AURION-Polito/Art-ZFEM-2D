@@ -62,9 +62,7 @@ int main(int argc, char **argv)
     const auto domains = test->domains();
     const auto boundary_info = test->boundary_info();
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_domains(config,
-                                                                                   domains,
-                                                                                   exportVtuFolder);
+    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_domains(config, domains, exportVtuFolder);
 
     Gedim::Profiler::StopTime("SetProblem");
     Gedim::Output::PrintStatusProgram("SetProblem");
@@ -85,15 +83,9 @@ int main(int argc, char **argv)
     Gedim::Profiler::StartTime("ComputeGeometricProperties");
 
     const auto meshGeometricData =
-        Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::create_domain_mesh_geometric_properties(config,
-                                                                                                                domains,
-                                                                                                                mesh);
+        Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::create_domain_mesh_geometric_properties(config, domains, mesh);
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_domain_mesh(config,
-                                                                                   domains,
-                                                                                       mesh,
-                                                                                       meshGeometricData,
-                                                                                   exportVtuFolder);
+    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_domain_mesh(config, domains, mesh, meshGeometricData, exportVtuFolder);
 
     Gedim::Profiler::StopTime("ComputeGeometricProperties");
     Gedim::Output::PrintStatusProgram("ComputeGeometricProperties");
@@ -163,17 +155,25 @@ int main(int argc, char **argv)
     Gedim::Output::PrintGenericMessage("ExportSolution...", true);
     Gedim::Profiler::StartTime("ExportSolution");
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_solution(config, domains, mesh, meshGeometricData, dofs_data, assembler_data, post_process_data, exportSolutionFolder, exportVtuFolder);
+    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_solution(config,
+                                                                                    domains,
+                                                                                    mesh,
+                                                                                    meshGeometricData,
+                                                                                    dofs_data,
+                                                                                    assembler_data,
+                                                                                    post_process_data,
+                                                                                    exportSolutionFolder,
+                                                                                    exportVtuFolder);
 
     Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_dofs(config,
-                                                                       mesh,
-                                                                       meshGeometricData,
-                                                                       meshDOFsInfo,
-                                                                       dofs_data,
-                                                                       reference_element_data,
-                                                                       assembler_data,
-                                                                       post_process_data,
-                                                                       exportVtuFolder);
+                                                                                mesh,
+                                                                                meshGeometricData,
+                                                                                meshDOFsInfo,
+                                                                                dofs_data,
+                                                                                reference_element_data,
+                                                                                assembler_data,
+                                                                                post_process_data,
+                                                                                exportVtuFolder);
 
     Gedim::Profiler::StopTime("ExportSolution");
     Gedim::Output::PrintStatusProgram("ExportSolution");

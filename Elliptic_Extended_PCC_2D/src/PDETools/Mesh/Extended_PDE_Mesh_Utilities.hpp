@@ -22,20 +22,20 @@ namespace Mesh
 {
 namespace PDE_Mesh_Utilities
 {
-  class PDE_Domain_2D_Collection
-  {
-    public:
-      std::vector<Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D> domains_2D;
-      std::vector<Eigen::Matrix3d> domains_rotation;
-      std::vector<Eigen::Vector3d> domains_translation;
-  };
+class PDE_Domain_2D_Collection
+{
+  public:
+    std::vector<Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D> domains_2D;
+    std::vector<Eigen::Matrix3d> domains_rotation;
+    std::vector<Eigen::Vector3d> domains_translation;
+};
 
-  class Extended_MeshGeometricData2D
-  {
-    public:
-      Gedim::MeshUtilities::MeshGeometricData2D mesh_geometric_data;
-      std::vector<unsigned int> cell2Ds_domain_position;
-  };
+class Extended_MeshGeometricData2D
+{
+  public:
+    Gedim::MeshUtilities::MeshGeometricData2D mesh_geometric_data;
+    std::vector<unsigned int> cell2Ds_domain_position;
+};
 
 } // namespace PDE_Mesh_Utilities
 } // namespace Mesh

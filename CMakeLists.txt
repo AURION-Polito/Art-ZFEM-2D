@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.12)
 project(Art_ZFEM_2D LANGUAGES CXX C VERSION 1.0)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/PolyDiM/gedim/GeDiM)
