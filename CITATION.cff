@@ -1,0 +1,24 @@
+cff-version: 0.0.1
+message: "If you use this software, please cite it as below."
+type: article
+authors:
+- family-names: Berrone
+given-names: Stefano
+orcid: https://orcid.org/0000-0001-8642-4258
+- family-names: Lorenzo 
+given-names: Neva
+orcid: https://orcid.org/0009-0009-6203-9596
+- family-names: Moreno 
+given-names: Pintore
+orcid: https://orcid.org/0000-0002-2837-2792
+- family-names: Teora
+given-names: Gioana
+orcid: https://orcid.org/0000-0002-8540-3639
+- family-names: Vicini
+given-names: Fabio
+orcid: https://orcid.org/0000-0001-7123-9199
+url: "https://arxiv.org/abs/2511.21302"
+doi: "https://doi.org/10.48550/arXiv.2511.21302"
+journal: "ArXiv"
+title: "The Zipped Finite Element Method: High-order Shape Functions for Polygons"
+year: 2025
