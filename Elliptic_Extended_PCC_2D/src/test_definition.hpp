@@ -280,85 +280,23 @@ struct Elliptic_Polynomial_Problem final : public I_Test
 // ***************************************************************************
 struct Elliptic_Problem final : public I_Test
 {
-  private:
-    double tol_1D;
-    double tol_2D;
-    unsigned int domain_type;
-
-  public:
-    Elliptic_Problem(const double &tol_1D, const double &tol_2D, const unsigned int domain_type)
-        : tol_1D(tol_1D), tol_2D(tol_2D), domain_type(domain_type)
-    {
-    }
-
     PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection domains() const
     {
         Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
 
-        Gedim::GeometryUtilitiesConfig geometry_utilities_config;
-        geometry_utilities_config.Tolerance1D = tol_1D;
-        geometry_utilities_config.Tolerance2D = tol_2D;
-        Gedim::GeometryUtilities geometry_utilities(geometry_utilities_config);
+        domain.area = 1.0;
 
-        switch (domain_type)
-        {
-        case 0: {
-            domain.area = 1.0;
+        domain.vertices = Eigen::MatrixXd::Zero(3, 4);
+        domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
+        domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
 
-            domain.vertices = Eigen::MatrixXd::Zero(3, 4);
-            domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
-            domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
-
-            domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
-        }
-        break;
-        case 1: {
-            domain.vertices = Eigen::MatrixXd::Zero(3, 17);
-            domain.vertices.col(0) << 4.0000000000000002e-01, 8.0000000000000004e-01, 0.0000000000000000e+00;
-            domain.vertices.col(1) << 0.0000000000000000e+00, 9.0000000000000002e-01, 0.0000000000000000e+00;
-            domain.vertices.col(2) << 1.0000000000000001e-01, 6.9999999999999996e-01, 0.0000000000000000e+00;
-            domain.vertices.col(3) << 2.9999999999999999e-01, 5.0000000000000000e-01, 0.0000000000000000e+00;
-            domain.vertices.col(4) << 0.0000000000000000e+00, 2.9999999999999999e-01, 0.0000000000000000e+00;
-            domain.vertices.col(5) << 2.0000000000000001e-01, 1.0000000000000001e-01, 0.0000000000000000e+00;
-            domain.vertices.col(6) << 5.0000000000000000e-01, 4.0000000000000002e-01, 0.0000000000000000e+00;
-            domain.vertices.col(7) << 4.0000000000000002e-01, 0.0000000000000000e+00, 0.0000000000000000e+00;
-            domain.vertices.col(8) << 8.0000000000000004e-01, 1.0000000000000001e-01, 0.0000000000000000e+00;
-            domain.vertices.col(9) << 6.9999999999999996e-01, 4.0000000000000002e-01, 0.0000000000000000e+00;
-            domain.vertices.col(10) << 9.0000000000000002e-01, 2.9999999999999999e-01, 0.0000000000000000e+00;
-            domain.vertices.col(11) << 9.0000000000000002e-01, 5.9999999999999998e-01, 0.0000000000000000e+00;
-            domain.vertices.col(12) << 1.0000000000000000e+00, 5.0000000000000000e-01, 0.0000000000000000e+00;
-            domain.vertices.col(13) << 1.0000000000000000e+00, 9.0000000000000002e-01, 0.0000000000000000e+00;
-            domain.vertices.col(14) << 6.9999999999999996e-01, 8.0000000000000004e-01, 0.0000000000000000e+00;
-            domain.vertices.col(15) << 5.9999999999999998e-01, 1.0000000000000000e+00, 0.0000000000000000e+00;
-            domain.vertices.col(16) << 2.9999999999999999e-01, 1.0000000000000000e+00, 0.0000000000000000e+00;
-
-            Eigen::Matrix3d affine_transform = Eigen::Matrix3d::Identity();
-            affine_transform(1, 1) = 0.25;
-
-            domain.vertices = affine_transform * domain.vertices;
-
-            const auto triangles = geometry_utilities.PolygonTriangulationByEarClipping(domain.vertices);
-            const auto triangles_vertices = geometry_utilities.ExtractTriangulationPoints(domain.vertices, triangles);
-
-            domain.area = 0.0;
-            for (const auto &triangle : triangles_vertices)
-                domain.area += geometry_utilities.PolygonArea(triangle);
-
-            domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Polygon;
-        }
-        break;
-        default:
-            throw std::runtime_error("unknown domain type");
-        }
+        domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
 
         return {{domain}, {Eigen::Matrix3d::Identity()}, {Eigen::Vector3d::Zero()}};
     }
 
     std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
     {
-        switch (domain_type)
-        {
-        case 0: {
             return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
                     {1, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                     {2, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
@@ -368,26 +306,6 @@ struct Elliptic_Problem final : public I_Test
                     {6, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                     {7, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                     {8, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}}};
-        }
-        break;
-        case 1: {
-            std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundaries;
-            boundaries.insert(std::make_pair(0,
-                                             Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo(
-                                                 {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0})));
-            for (unsigned int i = 0; i < 34; ++i)
-            {
-                boundaries.insert(std::make_pair(i + 1,
-                                                 Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo(
-                                                     {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1})));
-            }
-
-            return boundaries;
-        }
-        break;
-        default:
-            throw std::runtime_error("unknown domain type");
-        }
     }
 
     Eigen::VectorXd diffusion_term(const unsigned int domain_position, const Eigen::MatrixXd &points) const

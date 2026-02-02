@@ -34,10 +34,7 @@ std::unique_ptr<Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test> creat
     case Polydim::examples::Elliptic_Extended_PCC_2D::test::Test_Types::Elliptic_Polynomial_Problem:
         return std::make_unique<Polydim::examples::Elliptic_Extended_PCC_2D::test::Elliptic_Polynomial_Problem>();
     case Polydim::examples::Elliptic_Extended_PCC_2D::test::Test_Types::Elliptic_Problem:
-        return std::make_unique<Polydim::examples::Elliptic_Extended_PCC_2D::test::Elliptic_Problem>(
-            config.GeometricTolerance1D(),
-            config.GeometricTolerance2D(),
-            1);
+        return std::make_unique<Polydim::examples::Elliptic_Extended_PCC_2D::test::Elliptic_Problem>();
     case Polydim::examples::Elliptic_Extended_PCC_2D::test::Test_Types::Patch_Test_Rotated:
         return std::make_unique<Polydim::examples::Elliptic_Extended_PCC_2D::test::Patch_Test_Rotated>(
             config.GeometricTolerance1D(),
