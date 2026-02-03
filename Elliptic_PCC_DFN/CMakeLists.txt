@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(Elliptic_Extended_PCC_2D LANGUAGES CXX C)
+project(Elliptic_PCC_DFN LANGUAGES CXX C)
 
 # Create variables
 #########################################################
@@ -14,7 +14,7 @@ endif()
 ## GeDiM
 if (NOT TARGET GeDiM::GeDiM)
       find_package(GeDiM CONFIG REQUIRED)
-      list(APPEND ELLIPTIC_EXTENDED_PCC_2D_LINKED_LIBRARIES GeDiM::GeDiM)
+      list(APPEND Elliptic_PCC_DFN_LINKED_LIBRARIES GeDiM::GeDiM)
 else()
       get_target_property(GEDIM_LIBRARY_HEADERS GeDiM::GeDiM PUBLIC_HEADER)
       get_target_property(GEDIM_LIBRARY_NAME GeDiM::GeDiM EXPORT_NAME)
@@ -22,15 +22,15 @@ else()
       get_target_property(GEDIM_LIBRARY_INCLUDE_DIRECTORIES GeDiM::GeDiM INCLUDE_DIRECTORIES)
       get_target_property(GEDIM_LIBRARY_SOURCES GeDiM::GeDiM SOURCES)
 
-      list(APPEND ELLIPTIC_EXTENDED_PCC_2D_LINKED_LIBRARIES ${GEDIM_LIBRARY_NAME} ${GEDIM_LIBRARY_LINKED_LIBRARIES})
-      list(APPEND ELLIPTIC_EXTENDED_PCC_2D_HEADERS ${GEDIM_LIBRARY_HEADERS})
-      list(APPEND ELLIPTIC_EXTENDED_PCC_2D_INCLUDE ${GEDIM_LIBRARY_INCLUDE_DIRECTORIES})
+      list(APPEND Elliptic_PCC_DFN_LINKED_LIBRARIES ${GEDIM_LIBRARY_NAME} ${GEDIM_LIBRARY_LINKED_LIBRARIES})
+      list(APPEND Elliptic_PCC_DFN_HEADERS ${GEDIM_LIBRARY_HEADERS})
+      list(APPEND Elliptic_PCC_DFN_INCLUDE ${GEDIM_LIBRARY_INCLUDE_DIRECTORIES})
 endif()
 
 ## PolyDiM
 if (NOT TARGET PolyDiM::PolyDiM)
       find_package(PolyDiM CONFIG REQUIRED)
-      list(APPEND ELLIPTIC_EXTENDED_PCC_2D_LINKED_LIBRARIES PolyDiM::PolyDiM)
+      list(APPEND Elliptic_PCC_DFN_LINKED_LIBRARIES PolyDiM::PolyDiM)
 else()
       get_target_property(POLYDIM_LIBRARY_HEADERS PolyDiM::PolyDiM PUBLIC_HEADER)
       get_target_property(POLYDIM_LIBRARY_NAME PolyDiM::PolyDiM EXPORT_NAME)
@@ -38,9 +38,9 @@ else()
       get_target_property(POLYDIM_LIBRARY_INCLUDE_DIRECTORIES PolyDiM::PolyDiM INCLUDE_DIRECTORIES)
       get_target_property(POLYDIM_LIBRARY_SOURCES PolyDiM::PolyDiM SOURCES)
 
-      list(APPEND ELLIPTIC_EXTENDED_PCC_2D_LINKED_LIBRARIES ${POLYDIM_LIBRARY_NAME} ${POLYDIM_LIBRARY_LINKED_LIBRARIES})
-      list(APPEND ELLIPTIC_EXTENDED_PCC_2D_HEADERS ${POLYDIM_LIBRARY_HEADERS})
-      list(APPEND ELLIPTIC_EXTENDED_PCC_2D_INCLUDE ${POLYDIM_LIBRARY_INCLUDE_DIRECTORIES})
+      list(APPEND Elliptic_PCC_DFN_LINKED_LIBRARIES ${POLYDIM_LIBRARY_NAME} ${POLYDIM_LIBRARY_LINKED_LIBRARIES})
+      list(APPEND Elliptic_PCC_DFN_HEADERS ${POLYDIM_LIBRARY_HEADERS})
+      list(APPEND Elliptic_PCC_DFN_INCLUDE ${POLYDIM_LIBRARY_INCLUDE_DIRECTORIES})
 endif()
 
 ## MPI
@@ -85,30 +85,30 @@ endif()
 # Insert Sources
 #########################################################
 add_subdirectory(src)
-list(APPEND ELLIPTIC_EXTENDED_PCC_2D_SOURCES ${elliptic_extended_PCC_2D_sources} main.cpp)
-list(APPEND ELLIPTIC_EXTENDED_PCC_2D_HEADERS ${elliptic_extended_PCC_2D_headers})
-list(APPEND ELLIPTIC_EXTENDED_PCC_2D_INCLUDE ${elliptic_extended_PCC_2D_includes})
+list(APPEND Elliptic_PCC_DFN_SOURCES ${Elliptic_PCC_DFN_sources} main.cpp)
+list(APPEND Elliptic_PCC_DFN_HEADERS ${Elliptic_PCC_DFN_headers})
+list(APPEND Elliptic_PCC_DFN_INCLUDE ${Elliptic_PCC_DFN_includes})
 
 # Add variables for clang anc cppcheck
 ###############################################################################################
-list(APPEND CLANGFORMAT_FILES ${elliptic_extended_PCC_2D_sources} "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
-list(APPEND CLANGFORMAT_FILES ${elliptic_extended_PCC_2D_headers})
+list(APPEND CLANGFORMAT_FILES ${Elliptic_PCC_DFN_sources} "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
+list(APPEND CLANGFORMAT_FILES ${Elliptic_PCC_DFN_headers})
 set(CLANGFORMAT_FILES ${CLANGFORMAT_FILES} PARENT_SCOPE)
 
-list(APPEND CPPCHECK_FILES ${elliptic_extended_PCC_2D_sources} "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
-list(APPEND CPPCHECK_FILES ${elliptic_extended_PCC_2D_headers})
+list(APPEND CPPCHECK_FILES ${Elliptic_PCC_DFN_sources} "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
+list(APPEND CPPCHECK_FILES ${Elliptic_PCC_DFN_headers})
 set(CPPCHECK_FILES ${CPPCHECK_FILES} PARENT_SCOPE)
 
 # Create library test executable
 #########################################################
 add_executable(${PROJECT_NAME}
-      ${ELLIPTIC_EXTENDED_PCC_2D_SOURCES}
-      ${ELLIPTIC_EXTENDED_PCC_2D_HEADERS})
+      ${Elliptic_PCC_DFN_SOURCES}
+      ${Elliptic_PCC_DFN_HEADERS})
 
 target_include_directories(${PROJECT_NAME}
-      PRIVATE ${ELLIPTIC_EXTENDED_PCC_2D_INCLUDE})
+      PRIVATE ${Elliptic_PCC_DFN_INCLUDE})
 
-target_link_libraries(${PROJECT_NAME} ${ELLIPTIC_EXTENDED_PCC_2D_LINKED_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Elliptic_PCC_DFN_LINKED_LIBRARIES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
       LINKER_LANGUAGE CXX
