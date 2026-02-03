@@ -1,6 +1,5 @@
 import os
 import csv
-import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -59,7 +58,7 @@ def run_program(program_folder,
 def import_errors(export_path, method_type, method_order, test_type):
     errors_file = os.path.join(export_path,
                                "Solution",
-                               "Errors_" + str(test_type) + "_" + str(method_type) + "_" + str(method_order) + ".csv")
+                               "Errors_" + str(test_type) + "_" + str(method_type) + "_" + str(method_order) + ".csv")    
     errors = []
     with open(errors_file, newline='') as csvfile:
         file_reader = csv.reader(csvfile, delimiter=';')
@@ -69,17 +68,17 @@ def import_errors(export_path, method_type, method_order, test_type):
         for row in data:
             errors_row = []
             if counter == 0:
-                errors_row.append(row[6])
                 errors_row.append(row[7])
                 errors_row.append(row[8])
                 errors_row.append(row[9])
-                errors_row.append(row[10])
+                errors_row.append(row[12])
+                errors_row.append(row[13])
             else:
                 errors_row.append(float(row[6]))
-                errors_row.append(float(row[7]))
                 errors_row.append(float(row[8]))
                 errors_row.append(float(row[9]))
-                errors_row.append(float(row[10]))
+                errors_row.append(float(row[12]))
+                errors_row.append(float(row[13]))
             errors.append(errors_row)
             counter += 1
 
@@ -99,14 +98,14 @@ def test_errors(errors,
         errors = np.array(errors[1:])
         slope_L2 = np.polyfit(np.log(errors[:, 0]), np.log(errors[:, 1]), 1)[0]
         slope_H1 = np.polyfit(np.log(errors[:, 0]), np.log(errors[:, 2]), 1)[0]
-        print("Num. Ref. ", str(num_rows-1), ": ", slope_L2, slope_H1)
-        assert round(slope_L2) == round(float(method_order + 1.0))
-        assert round(slope_H1) == round(float(method_order))
+        print("Num. Ref. ", str(num_rows-1), ": ", slope_L2*(-2), slope_H1*(-2))
+        assert round(slope_L2*(-2)) == round(float(method_order + 1.0))
+        assert round(slope_H1*(-2)) == round(float(method_order))
 
 
 if __name__ == "__main__":
     program_folder = os.path.dirname(os.path.realpath(__file__))
-    program_path = os.path.join(".", program_folder, "Elliptic_PCC_2D")
+    program_path = os.path.join(".", program_folder, "Elliptic_PCC_DFN")
 
     remove_folder = False
 
@@ -116,7 +115,7 @@ if __name__ == "__main__":
 
     print("RUN TESTS...")
 
-    test_type = 1
+    test_type = 4
     mesh_generator = 1
     mesh_max_area = 0.0
     method_types = [0, 1, 2, 3]
@@ -140,7 +139,7 @@ if __name__ == "__main__":
             if remove_folder:
                 os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-    test_type = 1
+    test_type = 4
     mesh_generator = 0
     mesh_max_area = 0.1
     method_types = [0]
@@ -164,141 +163,60 @@ if __name__ == "__main__":
             if remove_folder:
                 os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-    test_type = 2
-    mesh_generator = 0
-    method_types = [0, 1, 2, 3]
-    mesh_max_areas = [0.01, 0.001]
-    method_orders = [1, 2, 3]
-    for method_type in method_types:
-        for method_order in method_orders:
-            num_ref = 0
-            for mesh_max_area in mesh_max_areas:
-                export_path = run_program(program_folder,
-                                          program_path,
-                                          "Run_MG{0}".format(mesh_generator),
-                                          method_type,
-                                          method_order,
-                                          test_type,
-                                          mesh_generator,
-                                          num_ref,
-                                          mesh_max_area=mesh_max_area)
-                num_ref += 1
-            errors = import_errors(export_path, method_type, method_order, test_type)
-            test_errors(errors,
-                        method_order,
-                        tol)
-            if remove_folder:
-                os.system("rm -rf " + os.path.join(program_folder, export_path))
-
-    test_type = 2
-    mesh_generator = 2
-    method_types = [1, 2, 3]
-    mesh_max_areas = [0.01, 0.001]
-    method_orders = [1, 2, 3]
-    for method_type in method_types:
-        for method_order in method_orders:
-            num_ref = 0
-            for mesh_max_area in mesh_max_areas:
-                export_path = run_program(program_folder,
-                                          program_path,
-                                          "Run_MG{0}".format(mesh_generator),
-                                          method_type,
-                                          method_order,
-                                          test_type,
-                                          mesh_generator,
-                                          num_ref,
-                                          mesh_max_area=mesh_max_area)
-                num_ref += 1
-
-            errors = import_errors(export_path, method_type, method_order, test_type)
-            test_errors(errors,
-                        method_order,
-                        tol)
-            if remove_folder:
-                os.system("rm -rf " + os.path.join(program_folder, export_path))
-
-    test_type = 3
-    mesh_generator = 5
-    method_types = [0, 1, 2, 3]
-    mesh_max_areas = [0.01, 0.001]
-    method_orders = [1, 2, 3]
-    for method_type in method_types:
-        for method_order in method_orders:
-            num_ref = 0
-            for mesh_max_area in mesh_max_areas:
-                export_path = run_program(program_folder,
-                                          program_path,
-                                          "Run_MG{0}".format(mesh_generator),
-                                          method_type,
-                                          method_order,
-                                          test_type,
-                                          mesh_generator,
-                                          num_ref,
-                                          mesh_max_area=mesh_max_area)
-                num_ref += 1
-
-            errors = import_errors(export_path, method_type, method_order, test_type)
-            test_errors(errors,
-                        method_order,
-                        tol)
-            if remove_folder:
-                os.system("rm -rf " + os.path.join(program_folder, export_path))
-
-    test_type = 2
+    test_type = 5
     mesh_generator = 4
-    mesh_import_paths = ["../../../../Mesh/2D/GenericPolyMesh"]
-    method_types = [1, 2, 3]
-    method_orders = np.arange(1, 13)
-    list_errors = []
+    mesh_import_paths = ["../../Mesh/2D/DFN_Frac_3/Triangle"]
+    method_types = [0,1,2,3]
+    method_orders = np.arange(1, 2)
     for method_type in method_types:
-        tab_errors = np.zeros([len(method_orders), 5])
         for method_order in method_orders:
-            export_path = run_program(program_folder,
-                                      program_path,
-                                      "Run_MG{0}".format(mesh_generator),
-                                      method_type,
-                                      method_order,
-                                      test_type,
-                                      mesh_generator,
-                                      0,
-                                      mesh_import_path=mesh_import_paths[0])
+            for mesh_size in [1,2,3,4,5]:
+                mesh_import_path = mesh_import_paths[0] + "/M" + str(mesh_size)
+                export_path = run_program(program_folder,
+                                        program_path,
+                                        "Run_MG{0}".format(mesh_generator),
+                                        method_type,
+                                        method_order,
+                                        test_type,
+                                        mesh_generator,
+                                        0,
+                                        mesh_import_path=mesh_import_path)
 
             errors = import_errors(export_path, method_type, method_order, test_type)
-            tab_errors[method_order-1, :] = np.array(errors[1:])
+            test_errors(errors,
+                        method_order,
+                        tol)
+            
             if remove_folder:
                 os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-        list_errors.append(tab_errors)
+    test_type = 5
+    mesh_generator = 4
+    mesh_import_paths = ["../../Mesh/2D/DFN_Frac_3/Polygon"]
+    method_types = [1,2,3]
+    method_orders = np.arange(1, 2)
+    for method_type in method_types:
+        for method_order in method_orders:
+            for mesh_size in [1,2,3,4,5]:
+                mesh_import_path = mesh_import_paths[0] + "/M" + str(mesh_size)
+                export_path = run_program(program_folder,
+                                        program_path,
+                                        "Run_MG{0}".format(mesh_generator),
+                                        method_type,
+                                        method_order,
+                                        test_type,
+                                        mesh_generator,
+                                        0,
+                                        mesh_import_path=mesh_import_path)
 
-    fig, ax = plt.subplots(figsize=(12, 12))
-    for h in range(len(method_types)):
-        errors = list_errors[h]
-        num_rows = len(errors)
+            errors = import_errors(export_path, method_type, method_order, test_type)
+            test_errors(errors,
+                        method_order,
+                        tol)
+            
+            if remove_folder:
+                os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-        if method_types[h] == 1:
-            ax.plot(method_orders, errors[:, 2], '-k^', linewidth=2, markersize=12,
-                    label="Mon")
-        elif method_types[h] == 2:
-            ax.plot(method_orders, errors[:, 2], '-ro', linewidth=2, markersize=12,
-                    label="Inrt")
-        elif method_types[h] == 3:
-            ax.plot(method_orders, errors[:, 2], '-bs', linewidth=2, markersize=12,
-                    label="Ortho")
-        else:
-            raise ValueError("Not valid method type")
-
-    plt.legend(bbox_to_anchor=(0., 1.02, 1.0, 0.2), loc="lower left",
-               mode="expand", borderaxespad=0, ncol=3, fontsize=30)
-
-    plt.xlabel('$k$', fontsize=30)
-    plt.ylabel('$e_1$', fontsize=30)
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=20)
-    plt.yscale('log')
-    plt.grid(True, which="both", ls="--")
-    plt.ylim(None, 10)
-    plt.savefig(export_folder + "/{}_decay_plot.png".format(test_type), bbox_inches='tight', dpi=300)
-    plt.show()
 
     if remove_folder:
         os.system("rm -rf " + os.path.join(program_folder, export_folder))
