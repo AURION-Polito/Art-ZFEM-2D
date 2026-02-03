@@ -52,7 +52,7 @@ struct Program_configuration final
         // Method parameters
         Gedim::Configurations::AddProperty("MethodType",
                                            static_cast<unsigned int>(Polydim::PDETools::LocalSpace_PCC_2D::MethodTypes::FEM_PCC),
-                                           "Method Type, 0 - FEM; 1 - EVem; 2 - EVem_Inertia; 3 - EVem_Ortho "
+                                           "Method Type, 0 - FEM; 1 - EVem; 2 - EVem_Inertia; 3 - EVem_Ortho; 4 - ZFEM "
                                            "(Default: "
                                            "0)");
         Gedim::Configurations::AddProperty("MethodOrder", static_cast<unsigned int>(1), "Method order (Default: 1)");
