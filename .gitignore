@@ -36,3 +36,7 @@ release
 *.out
 *.app
 
+# Python
+.venv
+.idea
+
