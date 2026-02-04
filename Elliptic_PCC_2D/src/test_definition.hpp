@@ -36,7 +36,6 @@ struct I_Test
     virtual std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const = 0;
     virtual std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const = 0;
     virtual Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const = 0;
-    virtual std::array<Eigen::VectorXd, 3> advection_term(const Eigen::MatrixXd &points) const = 0;
     virtual Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const = 0;
     virtual Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const = 0;
     virtual Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const = 0;
@@ -90,13 +89,6 @@ struct Elliptic_Problem final : public I_Test
     Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
     {
         return points.row(0).array() * points.row(1).array();
-    };
-
-    std::array<Eigen::VectorXd, 3> advection_term(const Eigen::MatrixXd &points) const
-    {
-        return {Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0)};
     };
 
     Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
@@ -192,13 +184,6 @@ struct Patch_Test final : public I_Test
     {
         const double k = 0.0;
         return Eigen::VectorXd::Constant(points.cols(), k);
-    };
-
-    std::array<Eigen::VectorXd, 3> advection_term(const Eigen::MatrixXd &points) const
-    {
-        return {Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0)};
     };
 
     Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
@@ -322,13 +307,6 @@ struct Elliptic_Polynomial_Problem final : public I_Test
     {
         const double k = 0.0;
         return Eigen::VectorXd::Constant(points.cols(), k);
-    };
-
-    std::array<Eigen::VectorXd, 3> advection_term(const Eigen::MatrixXd &points) const
-    {
-        return {Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0)};
     };
 
     Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const

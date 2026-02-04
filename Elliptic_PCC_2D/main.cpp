@@ -9,6 +9,7 @@
 //
 // This file can be used citing references in CITATION.cff file.
 
+#include "Eigen_CholeskySolver.hpp"
 #include "Eigen_LUSolver.hpp"
 #include "MeshMatricesDAO_mesh_connectivity_data.hpp"
 #include "VTKUtilities.hpp"
@@ -215,9 +216,8 @@ int main(int argc, char **argv)
         const auto start_time_solver = Gedim::Profiler::GetTime();
         if (dofs_data.NumberDOFs > 0)
         {
-            Gedim::Eigen_LUSolver solver;
+            Gedim::Eigen_CholeskySolver solver;
             solver.Initialize(assembler_data.globalMatrixA);
-
             solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
         }
         const auto end_time_solver = Gedim::Profiler::GetTime();
@@ -227,6 +227,18 @@ int main(int argc, char **argv)
 
     time_assembler /= config.ComputationalTime();
     time_solver /= config.ComputationalTime();
+
+    const unsigned int Method_ID = static_cast<unsigned int>(config.MethodType());
+    const unsigned int TEST_ID = static_cast<unsigned int>(config.TestType());
+
+    std::string s;
+    std::ostringstream str(s);
+    str.precision(6);
+    str << std::scientific << config.MeshMaxArea();
+
+    assembler_data.globalMatrixA.ToBinaryFile(exportSolutionFolder + "/Matrix_" + std::to_string(TEST_ID) + "_" +
+                                              std::to_string(Method_ID) + "_" + std::to_string(config.MethodOrder()) +
+                                              "_" + str.str() + ".txt");
 
     Gedim::Output::PrintGenericMessage("ComputeErrors...", true);
     Gedim::Profiler::StartTime("ComputeErrors");

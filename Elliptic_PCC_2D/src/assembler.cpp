@@ -241,7 +241,7 @@ Assembler::Elliptic_PCC_2D_Problem_Data Assembler::Assemble(
 {
     Elliptic_PCC_2D_Problem_Data result;
 
-    result.globalMatrixA.SetSize(dofs_data.NumberDOFs, dofs_data.NumberDOFs, Gedim::ISparseArray::SparseArrayTypes::None);
+    result.globalMatrixA.SetSize(dofs_data.NumberDOFs, dofs_data.NumberDOFs, Gedim::ISparseArray::SparseArrayTypes::Symmetric);
     result.dirichletMatrixA.SetSize(dofs_data.NumberDOFs, dofs_data.NumberStrongs);
     result.rightHandSide.SetSize(dofs_data.NumberDOFs);
     result.solution.SetSize(dofs_data.NumberDOFs);
@@ -270,17 +270,11 @@ Assembler::Elliptic_PCC_2D_Problem_Data Assembler::Assemble(
 
         const auto diffusion_term_values = test.diffusion_term(cell2D_internal_quadrature.Points);
         const auto reaction_term_values = test.reaction_term(cell2D_internal_quadrature.Points);
-        const auto advection_term_values = test.advection_term(cell2D_internal_quadrature.Points);
         const auto source_term_values = test.source_term(cell2D_internal_quadrature.Points);
 
         const Eigen::MatrixXd local_A = equation.ComputeCellDiffusionMatrix(diffusion_term_values,
                                                                             basis_functions_derivative_values,
                                                                             cell2D_internal_quadrature.Weights);
-
-        Eigen::MatrixXd local_B = equation.ComputeCellAdvectionMatrix(advection_term_values,
-                                                                      basis_functions_values,
-                                                                      basis_functions_derivative_values,
-                                                                      cell2D_internal_quadrature.Weights);
 
         Eigen::MatrixXd local_C =
             equation.ComputeCellReactionMatrix(reaction_term_values, basis_functions_values, cell2D_internal_quadrature.Weights);
@@ -309,7 +303,7 @@ Assembler::Elliptic_PCC_2D_Problem_Data Assembler::Assemble(
         Polydim::PDETools::Assembler_Utilities::assemble_local_matrix_to_global_matrix<2>(c,
                                                                                           local_matrix_to_global_matrix_dofs_data,
                                                                                           local_matrix_to_global_matrix_dofs_data,
-                                                                                          local_A + local_A_stab + local_B + local_C,
+                                                                                          local_A + local_A_stab + local_C,
                                                                                           local_rhs,
                                                                                           result.globalMatrixA,
                                                                                           result.dirichletMatrixA,
