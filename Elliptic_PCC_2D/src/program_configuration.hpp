@@ -46,7 +46,7 @@ struct Program_Configuration final
 
         Gedim::Configurations::AddProperty("GeometricTolerance2D", 1.0e-14, "Geometric Tolerance 2D (Default: 1.0e-14)");
 
-        Gedim::Configurations::AddProperty("SubTraingulate", false, "SubTraingulate Mesh (Default: false)");
+        Gedim::Configurations::AddProperty("SubTriangulate", false, "SubTraingulate Mesh (Default: false)");
 
         // Method parameters
         Gedim::Configurations::AddProperty("MethodType",
@@ -122,9 +122,9 @@ struct Program_Configuration final
         return Gedim::Configurations::GetPropertyValue<unsigned int>("ComputationalTime");
     }
 
-    inline bool SubTraingulate() const
+    inline bool SubTriangulate() const
     {
-        return Gedim::Configurations::GetPropertyValue<bool>("SubTraingulate");
+        return Gedim::Configurations::GetPropertyValue<bool>("SubTriangulate");
     }
 };
 } // namespace Elliptic_PCC_2D

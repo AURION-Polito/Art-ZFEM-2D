@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     Gedim::MeshMatricesDAO mesh(meshData);
     Gedim::MeshUtilities::MeshGeometricData2D meshGeometricData;
 
-    if (!config.SubTraingulate())
+    if (!config.SubTriangulate())
     {
 
         Gedim::Output::PrintGenericMessage("CreateMesh...", true);
