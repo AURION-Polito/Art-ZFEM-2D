@@ -462,7 +462,7 @@ if __name__ == "__main__":
     test_type = 3
     mesh_generator = 2
     method_type = 0
-    mesh_max_areas = [0.005, 0.002, 0.001, 0.0005, 0.0003, 1.0e-04, 8*1.0e-05, 5*1.0e-05, 2*1.0e-05, 1.0e-05]
+    mesh_max_areas = [0.005, 0.002, 0.001, 0.0005, 0.0003]
     method_orders = [6]
     list_errors_fem = []
     vv = 0
