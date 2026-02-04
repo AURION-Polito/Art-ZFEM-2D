@@ -57,6 +57,7 @@ struct Program_Configuration final
         Gedim::Configurations::AddProperty("MethodOrder", static_cast<unsigned int>(1), "Method order (Default: 1)");
         Gedim::Configurations::AddProperty("ComputeMethodPerformance", false, "Compute Method Performance (Default: false)");
         Gedim::Configurations::AddProperty("ComputeConditionNumber", false, "Compute Condition Number (Default: false)");
+        Gedim::Configurations::AddProperty("PostProcess", true, "Post Process (Default: true)");
 
         Gedim::Configurations::AddProperty("ComputationalTime",
                                            static_cast<unsigned int>(1),
@@ -107,6 +108,10 @@ struct Program_Configuration final
     inline bool ComputeConditionNumber() const
     {
         return Gedim::Configurations::GetPropertyValue<bool>("ComputeConditionNumber");
+    }
+    inline bool PostProcess() const
+    {
+        return Gedim::Configurations::GetPropertyValue<bool>("PostProcess");
     }
     inline unsigned int MethodOrder() const
     {

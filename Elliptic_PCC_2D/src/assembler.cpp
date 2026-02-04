@@ -407,69 +407,80 @@ Assembler::PostProcess_Data Assembler::PostProcessSolution(const Polydim::exampl
     result.cell2Ds_norm_L2.setZero(mesh.Cell2DTotalNumber());
     result.cell2Ds_error_H1.setZero(mesh.Cell2DTotalNumber());
     result.cell2Ds_norm_H1.setZero(mesh.Cell2DTotalNumber());
-    result.error_L2 = 0.0;
-    result.norm_L2 = 0.0;
-    result.error_H1 = 0.0;
-    result.norm_H1 = 0.0;
     result.mesh_size = 0.0;
 
     for (unsigned int c = 0; c < mesh.Cell2DTotalNumber(); c++)
     {
-        const auto local_space_data = Polydim::PDETools::LocalSpace_PCC_2D::CreateLocalSpace(config.GeometricTolerance1D(),
-                                                                                             config.GeometricTolerance2D(),
-                                                                                             mesh_geometric_data,
-                                                                                             c,
-                                                                                             reference_element_data);
+        if (config.PostProcess())
+        {
+            const auto local_space_data =
+                Polydim::PDETools::LocalSpace_PCC_2D::CreateLocalSpace(config.GeometricTolerance1D(),
+                                                                       config.GeometricTolerance2D(),
+                                                                       mesh_geometric_data,
+                                                                       c,
+                                                                       reference_element_data);
 
-        const auto basis_functions_values =
-            Polydim::PDETools::LocalSpace_PCC_2D::BasisFunctionsValues(reference_element_data,
-                                                                       local_space_data,
-                                                                       Polydim::VEM::PCC::ProjectionTypes::Pi0k);
+            const auto basis_functions_values =
+                Polydim::PDETools::LocalSpace_PCC_2D::BasisFunctionsValues(reference_element_data,
+                                                                           local_space_data,
+                                                                           Polydim::VEM::PCC::ProjectionTypes::Pi0k);
 
-        const auto basis_functions_derivative_values =
-            Polydim::PDETools::LocalSpace_PCC_2D::BasisFunctionsDerivativeValues(reference_element_data, local_space_data);
+            const auto basis_functions_derivative_values =
+                Polydim::PDETools::LocalSpace_PCC_2D::BasisFunctionsDerivativeValues(reference_element_data, local_space_data);
 
-        const auto cell2D_internal_quadrature =
-            Polydim::PDETools::LocalSpace_PCC_2D::InternalQuadrature(reference_element_data, local_space_data);
+            const auto cell2D_internal_quadrature =
+                Polydim::PDETools::LocalSpace_PCC_2D::InternalQuadrature(reference_element_data, local_space_data);
 
-        const auto exact_solution_values = test.exact_solution(cell2D_internal_quadrature.Points);
-        const auto exact_derivative_solution_values = test.exact_derivative_solution(cell2D_internal_quadrature.Points);
+            const auto exact_solution_values = test.exact_solution(cell2D_internal_quadrature.Points);
+            const auto exact_derivative_solution_values = test.exact_derivative_solution(cell2D_internal_quadrature.Points);
 
-        const auto local_count_dofs = Polydim::PDETools::Assembler_Utilities::local_count_dofs<2>(c, dofs_data);
-        const Eigen::VectorXd dofs_values =
-            PDETools::Assembler_Utilities::global_solution_to_local_solution<2>(c,
-                                                                                dofs_data,
-                                                                                local_count_dofs.num_total_dofs,
-                                                                                local_count_dofs.offsets_DOFs,
-                                                                                {0},
-                                                                                {0},
-                                                                                assembler_data.solution,
-                                                                                assembler_data.solutionDirichlet);
+            const auto local_count_dofs = Polydim::PDETools::Assembler_Utilities::local_count_dofs<2>(c, dofs_data);
+            const Eigen::VectorXd dofs_values =
+                PDETools::Assembler_Utilities::global_solution_to_local_solution<2>(c,
+                                                                                    dofs_data,
+                                                                                    local_count_dofs.num_total_dofs,
+                                                                                    local_count_dofs.offsets_DOFs,
+                                                                                    {0},
+                                                                                    {0},
+                                                                                    assembler_data.solution,
+                                                                                    assembler_data.solutionDirichlet);
 
-        const Eigen::VectorXd local_error_L2 = (basis_functions_values * dofs_values - exact_solution_values).array().square();
-        const Eigen::VectorXd local_norm_L2 = (basis_functions_values * dofs_values).array().square();
+            const Eigen::VectorXd local_error_L2 =
+                (basis_functions_values * dofs_values - exact_solution_values).array().square();
+            const Eigen::VectorXd local_norm_L2 = (basis_functions_values * dofs_values).array().square();
 
-        result.cell2Ds_error_L2[c] = cell2D_internal_quadrature.Weights.transpose() * local_error_L2;
-        result.cell2Ds_norm_L2[c] = cell2D_internal_quadrature.Weights.transpose() * local_norm_L2;
+            result.cell2Ds_error_L2[c] = cell2D_internal_quadrature.Weights.transpose() * local_error_L2;
+            result.cell2Ds_norm_L2[c] = cell2D_internal_quadrature.Weights.transpose() * local_norm_L2;
 
-        const Eigen::VectorXd local_error_H1 =
-            (basis_functions_derivative_values[0] * dofs_values - exact_derivative_solution_values[0]).array().square() +
-            (basis_functions_derivative_values[1] * dofs_values - exact_derivative_solution_values[1]).array().square();
+            const Eigen::VectorXd local_error_H1 =
+                (basis_functions_derivative_values[0] * dofs_values - exact_derivative_solution_values[0]).array().square() +
+                (basis_functions_derivative_values[1] * dofs_values - exact_derivative_solution_values[1]).array().square();
 
-        const Eigen::VectorXd local_norm_H1 = (basis_functions_derivative_values[0] * dofs_values).array().square() +
-                                              (basis_functions_derivative_values[1] * dofs_values).array().square();
+            const Eigen::VectorXd local_norm_H1 = (basis_functions_derivative_values[0] * dofs_values).array().square() +
+                                                  (basis_functions_derivative_values[1] * dofs_values).array().square();
 
-        result.cell2Ds_error_H1[c] = cell2D_internal_quadrature.Weights.transpose() * local_error_H1;
-        result.cell2Ds_norm_H1[c] = cell2D_internal_quadrature.Weights.transpose() * local_norm_H1;
+            result.cell2Ds_error_H1[c] = cell2D_internal_quadrature.Weights.transpose() * local_error_H1;
+            result.cell2Ds_norm_H1[c] = cell2D_internal_quadrature.Weights.transpose() * local_norm_H1;
+        }
 
         if (mesh_geometric_data.Cell2DsDiameters.at(c) > result.mesh_size)
             result.mesh_size = mesh_geometric_data.Cell2DsDiameters.at(c);
     }
 
-    result.error_L2 = std::sqrt(result.cell2Ds_error_L2.sum());
-    result.norm_L2 = std::sqrt(result.cell2Ds_norm_L2.sum());
-    result.error_H1 = std::sqrt(result.cell2Ds_error_H1.sum());
-    result.norm_H1 = std::sqrt(result.cell2Ds_norm_H1.sum());
+    if (config.PostProcess())
+    {
+        result.error_L2 = std::sqrt(result.cell2Ds_error_L2.sum());
+        result.norm_L2 = std::sqrt(result.cell2Ds_norm_L2.sum());
+        result.error_H1 = std::sqrt(result.cell2Ds_error_H1.sum());
+        result.norm_H1 = std::sqrt(result.cell2Ds_norm_H1.sum());
+    }
+    else
+    {
+        result.error_L2 = 0.0;
+        result.norm_L2 = 0.0;
+        result.error_H1 = 0.0;
+        result.norm_H1 = 0.0;
+    }
 
     if (config.ComputeConditionNumber())
         result.conditioning = assembler_data.globalMatrixA.Cond();

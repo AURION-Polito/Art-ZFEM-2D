@@ -249,15 +249,15 @@ int main(int argc, char **argv)
                                                                            time_solver,
                                                                            exportSolutionFolder,
                                                                            exportVtuFolder);
-
-    Polydim::examples::Elliptic_PCC_2D::program_utilities::export_dofs(config,
-                                                                       mesh,
-                                                                       meshGeometricData,
-                                                                       meshDOFsInfo,
-                                                                       dofs_data,
-                                                                       assembler_data,
-                                                                       post_process_data,
-                                                                       exportVtuFolder);
+    if (config.PostProcess())
+        Polydim::examples::Elliptic_PCC_2D::program_utilities::export_dofs(config,
+                                                                           mesh,
+                                                                           meshGeometricData,
+                                                                           meshDOFsInfo,
+                                                                           dofs_data,
+                                                                           assembler_data,
+                                                                           post_process_data,
+                                                                           exportVtuFolder);
 
     Gedim::Profiler::StopTime("ExportSolution");
     Gedim::Output::PrintStatusProgram("ExportSolution");

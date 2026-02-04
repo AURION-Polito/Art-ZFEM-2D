@@ -249,6 +249,7 @@ void export_solution(const Polydim::examples::Elliptic_PCC_2D::Program_Configura
         errorFile.close();
     }
 
+    if (config.PostProcess())
     {
 
         Gedim::VTKUtilities exporter;
