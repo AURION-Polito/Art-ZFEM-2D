@@ -166,7 +166,7 @@ if __name__ == "__main__":
     test_type = 5
     mesh_generator = 4
     mesh_import_paths = ["../../Mesh/2D/DFN_Frac_3/Triangle"]
-    method_types = [0,1,2,3]
+    method_types = [0,1,2,3,4]
     method_orders = np.arange(1, 2)
     for method_type in method_types:
         for method_order in method_orders:
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     test_type = 5
     mesh_generator = 4
     mesh_import_paths = ["../../Mesh/2D/DFN_Frac_3/Polygon"]
-    method_types = [1,2,3]
+    method_types = [1,2,3,4]
     method_orders = np.arange(1, 2)
     for method_type in method_types:
         for method_order in method_orders:
