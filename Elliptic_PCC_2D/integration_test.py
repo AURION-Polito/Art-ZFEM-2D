@@ -461,37 +461,38 @@ if __name__ == "__main__":
 
     test_type = 3
     mesh_generator = 2
-    method_type = 0
-    mesh_max_areas = [0.005, 0.002, 0.001, 0.0005, 0.0003]
+    # method_type = 0
+    # mesh_max_areas = [0.005, 0.002, 0.001, 0.0005, 0.0003]
     method_orders = [6]
-    list_errors_fem = []
-    vv = 0
-    for method_order in method_orders:
-        num_ref = 0
-        for mesh_max_area in mesh_max_areas:
-            export_path = run_program(program_folder,
-                                      program_path,
-                                      "Run_MG{0}".format(mesh_generator),
-                                      method_type,
-                                      method_order,
-                                      test_type,
-                                      mesh_generator,
-                                      num_ref,
-                                      sub_triangulate = True,
-                                      compute_conditioning = False,
-                                      num_code_executions = 5,
-                                      mesh_max_area=mesh_max_area,
-                                      mesh_import_path="./", )
-            num_ref += 1
-
-        errors = import_errors(export_path, method_type, method_order, test_type)
-
-        list_errors_fem.append(np.array(errors[1:]))
-
-        if remove_folder:
-            os.system("rm -rf " + os.path.join(program_folder, export_path))
+    # list_errors_fem = []
+    # vv = 0
+    # for method_order in method_orders:
+    #     num_ref = 0
+    #     for mesh_max_area in mesh_max_areas:
+    #         export_path = run_program(program_folder,
+    #                                   program_path,
+    #                                   "Run_MG{0}".format(mesh_generator),
+    #                                   method_type,
+    #                                   method_order,
+    #                                   test_type,
+    #                                   mesh_generator,
+    #                                   num_ref,
+    #                                   sub_triangulate = True,
+    #                                   compute_conditioning = False,
+    #                                   num_code_executions = 5,
+    #                                   mesh_max_area=mesh_max_area,
+    #                                   mesh_import_path="./", )
+    #         num_ref += 1
+    #
+    #     errors = import_errors(export_path, method_type, method_order, test_type)
+    #
+    #     list_errors_fem.append(np.array(errors[1:]))
+    #
+    #     if remove_folder:
+    #         os.system("rm -rf " + os.path.join(program_folder, export_path))
 
     method_types = [1, 4]
+    mesh_max_areas = [0.0001]
     name_test = "voro_time"
     for method_order in method_orders:
         list_errors = []
