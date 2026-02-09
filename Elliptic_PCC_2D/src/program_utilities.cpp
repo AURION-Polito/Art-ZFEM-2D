@@ -32,6 +32,8 @@ std::unique_ptr<Polydim::examples::Elliptic_PCC_2D::test::I_Test> create_test(co
         return std::make_unique<Polydim::examples::Elliptic_PCC_2D::test::Elliptic_Polynomial_Problem>();
     case Polydim::examples::Elliptic_PCC_2D::test::Test_Types::Elliptic_Problem:
         return std::make_unique<Polydim::examples::Elliptic_PCC_2D::test::Elliptic_Problem>();
+      case Polydim::examples::Elliptic_PCC_2D::test::Test_Types::Computational_Comparison:
+          return std::make_unique<Polydim::examples::Elliptic_PCC_2D::test::Computational_Comparison>();
     default:
         throw std::runtime_error("Test type " + std::to_string((unsigned int)config.TestType()) + " not supported");
     }
