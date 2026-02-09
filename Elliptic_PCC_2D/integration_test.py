@@ -268,7 +268,6 @@ if __name__ == "__main__":
         test_type = 3
         mesh_generator = 0
         method_type = 0
-        virtual_vertex_types = [2]
         mesh_max_areas = [0.05, 0.02, 0.01, 0.005, 0.0025]
         method_orders = [1, 2, 3, 4, 5, 6]
         list_errors_fem = []
@@ -302,8 +301,41 @@ if __name__ == "__main__":
 
         test_type = 3
         mesh_generator = 2
+        method_type = 0
+        mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
+        method_orders = [1, 2, 3, 4, 5, 6]
+        list_errors_fem_2 = []
+        vv = 0
+        for method_order in method_orders:
+            num_ref = 0
+            for mesh_max_area in mesh_max_areas:
+                export_path = run_program(program_folder,
+                                          program_path,
+                                          "Run_MG{0}".format(mesh_generator),
+                                          method_type,
+                                          method_order,
+                                          test_type,
+                                          mesh_generator,
+                                          num_ref,
+                                          sub_triangulate=True,
+                                          compute_conditioning=True,
+                                          num_code_executions=1,
+                                          mesh_max_area=mesh_max_area,
+                                          mesh_import_path="./", )
+                num_ref += 1
+
+            errors = import_errors(export_path, method_type, method_order, test_type)
+            test_errors(errors,
+                        method_order,
+                        tol)
+            list_errors_fem_2.append(np.array(errors[1:]))
+
+            if remove_folder:
+                os.system("rm -rf " + os.path.join(program_folder, export_path))
+
+        test_type = 3
+        mesh_generator = 2
         method_types = [1, 4]
-        virtual_vertex_types = [2, 6]
         mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
         method_orders = [1, 2, 3, 4, 5, 6]
         name_test = "voro"
@@ -352,8 +384,41 @@ if __name__ == "__main__":
 
         test_type = 3
         mesh_generator = 6
+        method_type = 0
+        mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
+        method_orders = [1, 2, 3, 4, 5, 6]
+        list_errors_fem_3 = []
+        vv = 0
+        for method_order in method_orders:
+            num_ref = 0
+            for mesh_max_area in mesh_max_areas:
+                export_path = run_program(program_folder,
+                                          program_path,
+                                          "Run_MG{0}".format(mesh_generator),
+                                          method_type,
+                                          method_order,
+                                          test_type,
+                                          mesh_generator,
+                                          num_ref,
+                                          sub_triangulate=True,
+                                          compute_conditioning=True,
+                                          num_code_executions=1,
+                                          mesh_max_area=mesh_max_area,
+                                          mesh_import_path="./", )
+                num_ref += 1
+
+            errors = import_errors(export_path, method_type, method_order, test_type)
+            test_errors(errors,
+                        method_order,
+                        tol)
+            list_errors_fem_3.append(np.array(errors[1:]))
+
+            if remove_folder:
+                os.system("rm -rf " + os.path.join(program_folder, export_path))
+
+        test_type = 3
+        mesh_generator = 6
         method_types = [1, 4]
-        virtual_vertex_types = [2, 6]
         mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
         method_orders = [1, 2, 3, 4, 5, 6]
         name_test = "rdquad"
@@ -404,7 +469,6 @@ if __name__ == "__main__":
         test_type = 3
         mesh_generator = 4
         method_types = [1, 4]
-        virtual_vertex_types = [2, 6]
         mesh_max_areas = [program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_3x3",
                           program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_6x6",
                           program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_9x9",
@@ -456,7 +520,6 @@ if __name__ == "__main__":
         test_type = 3
         mesh_generator = 0
         method_types = [1, 4]
-        virtual_vertex_types = [2, 6]
         mesh_max_areas = [0.05, 0.02, 0.01, 0.005, 0.0025]
         method_orders = [1, 2, 3, 4, 5, 6]
         name_test = "triangle"
