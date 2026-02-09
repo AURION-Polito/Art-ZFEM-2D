@@ -20,7 +20,7 @@ namespace Polydim
 {
 namespace examples
 {
-namespace Elliptic_Extended_PCC_2D
+namespace Elliptic_PCC_DFN
 {
 namespace test
 {
@@ -781,7 +781,7 @@ struct DFN_Frac_3 final : public I_Test
 
 // ***************************************************************************
 } // namespace test
-} // namespace Elliptic_Extended_PCC_2D
+} // namespace Elliptic_PCC_DFN
 } // namespace examples
 } // namespace Polydim
 

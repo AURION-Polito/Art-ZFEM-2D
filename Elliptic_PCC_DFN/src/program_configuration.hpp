@@ -21,18 +21,18 @@ namespace Polydim
 {
 namespace examples
 {
-namespace Elliptic_Extended_PCC_2D
+namespace Elliptic_PCC_DFN
 {
 struct Program_configuration final
 {
     Program_configuration()
     {
-        Gedim::Configurations::AddProperty(
-            "TestType",
-            static_cast<unsigned int>(Polydim::examples::Elliptic_Extended_PCC_2D::test::Test_Types::Patch_Test),
-            "Test Type 1 - Patch_Test; 2 - Elliptic_Polynomial_Problem; 3 - Elliptic_Problem; 4 - Patch_Test_Rotated; "
-            "5 - DFN_Frac_3 "
-            "(Default: 1)");
+        Gedim::Configurations::AddProperty("TestType",
+                                           static_cast<unsigned int>(Polydim::examples::Elliptic_PCC_DFN::test::Test_Types::Patch_Test),
+                                           "Test Type 1 - Patch_Test; 2 - Elliptic_Polynomial_Problem; 3 - "
+                                           "Elliptic_Problem; 4 - Patch_Test_Rotated; "
+                                           "5 - DFN_Frac_3 "
+                                           "(Default: 1)");
         // Export parameters
         Gedim::Configurations::AddProperty("ExportFolder", "./Run", "Folder where to export data (Default: ./Export)");
         // Mesh parameters
@@ -57,6 +57,10 @@ struct Program_configuration final
                                            "0)");
         Gedim::Configurations::AddProperty("MethodOrder", static_cast<unsigned int>(1), "Method order (Default: 1)");
         Gedim::Configurations::AddProperty("ComputeMethodPerformance", true, "Compute Method Performance (Default: false)");
+
+        Gedim::Configurations::AddProperty("ComputationalTime",
+                                           static_cast<unsigned int>(1),
+                                           "Number of code execution to compute computational time (Default: 1)");
     }
 
     inline std::string ExportFolder() const
@@ -64,9 +68,9 @@ struct Program_configuration final
         return Gedim::Configurations::GetPropertyValue<std::string>("ExportFolder");
     }
 
-    inline Polydim::examples::Elliptic_Extended_PCC_2D::test::Test_Types TestType() const
+    inline Polydim::examples::Elliptic_PCC_DFN::test::Test_Types TestType() const
     {
-        return static_cast<Polydim::examples::Elliptic_Extended_PCC_2D::test::Test_Types>(
+        return static_cast<Polydim::examples::Elliptic_PCC_DFN::test::Test_Types>(
             Gedim::Configurations::GetPropertyValue<unsigned int>("TestType"));
     }
     inline Polydim::PDETools::Mesh::PDE_Mesh_Utilities::MeshGenerator_Types_2D MeshGenerator() const
@@ -104,8 +108,13 @@ struct Program_configuration final
     {
         return Gedim::Configurations::GetPropertyValue<unsigned int>("MethodOrder");
     }
+
+    inline unsigned int ComputationalTime() const
+    {
+        return Gedim::Configurations::GetPropertyValue<unsigned int>("ComputationalTime");
+    }
 };
-} // namespace Elliptic_Extended_PCC_2D
+} // namespace Elliptic_PCC_DFN
 } // namespace examples
 } // namespace Polydim
 

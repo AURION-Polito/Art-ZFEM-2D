@@ -16,7 +16,6 @@
 #include "Eigen_Array.hpp"
 #include "Eigen_SparseArray.hpp"
 #include "LocalSpace_PCC_2D.hpp"
-#include "MeshMatricesDAO.hpp"
 #include "MeshUtilities.hpp"
 #include "program_configuration.hpp"
 #include "test_definition.hpp"
@@ -25,12 +24,12 @@ namespace Polydim
 {
 namespace examples
 {
-namespace Elliptic_Extended_PCC_2D
+namespace Elliptic_PCC_DFN
 {
 class Assembler final
 {
   public:
-    struct Elliptic_Extended_PCC_2D_Problem_Data final
+    struct Elliptic_PCC_DFN_Problem_Data final
     {
         Gedim::Eigen_SparseArray<> globalMatrixA;
         Gedim::Eigen_SparseArray<> dirichletMatrixA;
@@ -79,8 +78,8 @@ class Assembler final
                            const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
                            const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
                            const Polydim::PDETools::LocalSpace_PCC_2D::LocalSpace_Data &local_space_data,
-                           const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test,
-                           Elliptic_Extended_PCC_2D_Problem_Data &assembler_data) const;
+                           const Polydim::examples::Elliptic_PCC_DFN::test::I_Test &test,
+                           Elliptic_PCC_DFN_Problem_Data &assembler_data) const;
 
     void ComputeWeakTerm(const Gedim::GeometryUtilities &geometry_utilities,
                          const unsigned int cell2DIndex,
@@ -93,35 +92,34 @@ class Assembler final
                          const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
                          const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
                          const Polydim::PDETools::LocalSpace_PCC_2D::LocalSpace_Data &local_space_data,
-                         const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test,
-                         Elliptic_Extended_PCC_2D_Problem_Data &assembler_data) const;
+                         const Polydim::examples::Elliptic_PCC_DFN::test::I_Test &test,
+                         Elliptic_PCC_DFN_Problem_Data &assembler_data) const;
 
   public:
-    Elliptic_Extended_PCC_2D_Problem_Data Assemble(
-        const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
-        const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
-        const Gedim::MeshMatricesDAO &mesh,
-        const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
-        const Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo &mesh_dofs_info,
-        const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
-        const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
-        const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test) const;
+    Elliptic_PCC_DFN_Problem_Data Assemble(const Polydim::examples::Elliptic_PCC_DFN::Program_configuration &config,
+                                           const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
+                                           const Gedim::MeshMatricesDAO &mesh,
+                                           const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
+                                           const Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo &mesh_dofs_info,
+                                           const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
+                                           const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
+                                           const Polydim::examples::Elliptic_PCC_DFN::test::I_Test &test) const;
 
-    Performance_Data ComputePerformance(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
+    Performance_Data ComputePerformance(const Polydim::examples::Elliptic_PCC_DFN::Program_configuration &config,
                                         const Gedim::MeshMatricesDAO &mesh,
                                         const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
                                         const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data) const;
 
-    PostProcess_Data PostProcessSolution(const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
+    PostProcess_Data PostProcessSolution(const Polydim::examples::Elliptic_PCC_DFN::Program_configuration &config,
                                          const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
                                          const Gedim::MeshMatricesDAO &mesh,
                                          const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
                                          const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
                                          const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
-                                         const Elliptic_Extended_PCC_2D_Problem_Data &assembler_data,
-                                         const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test) const;
+                                         const Elliptic_PCC_DFN_Problem_Data &assembler_data,
+                                         const Polydim::examples::Elliptic_PCC_DFN::test::I_Test &test) const;
 };
-} // namespace Elliptic_Extended_PCC_2D
+} // namespace Elliptic_PCC_DFN
 } // namespace examples
 } // namespace Polydim
 

@@ -9,17 +9,16 @@
 //
 // This file can be used citing references in CITATION.cff file.
 
-#include "Eigen_LUSolver.hpp"
+#include "Eigen_CholeskySolver.hpp"
 #include "MeshMatricesDAO_mesh_connectivity_data.hpp"
-#include "VTKUtilities.hpp"
 #include "program_utilities.hpp"
 #include "test_definition.hpp"
 
-unsigned int Polydim::examples::Elliptic_Extended_PCC_2D::test::Patch_Test::order;
+unsigned int Polydim::examples::Elliptic_PCC_DFN::test::Patch_Test::order;
 
 int main(int argc, char **argv)
 {
-    Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration config;
+    Polydim::examples::Elliptic_PCC_DFN::Program_configuration config;
 
     if (!Gedim::Output::FileExists("./Parameters.ini"))
         Gedim::Configurations::ExportToIni("./Parameters.ini", false);
@@ -55,14 +54,14 @@ int main(int argc, char **argv)
     Gedim::Output::PrintGenericMessage("SetProblem...", true);
     Gedim::Profiler::StartTime("SetProblem");
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::test::Patch_Test::order = config.MethodOrder();
+    Polydim::examples::Elliptic_PCC_DFN::test::Patch_Test::order = config.MethodOrder();
 
-    const auto test = Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::create_test(config);
+    const auto test = Polydim::examples::Elliptic_PCC_DFN::program_utilities::create_test(config);
 
     const auto domains = test->domains();
     const auto boundary_info = test->boundary_info();
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_domains(config, domains, exportVtuFolder);
+    Polydim::examples::Elliptic_PCC_DFN::program_utilities::export_domains(config, domains, exportVtuFolder);
 
     Gedim::Profiler::StopTime("SetProblem");
     Gedim::Output::PrintStatusProgram("SetProblem");
@@ -74,7 +73,7 @@ int main(int argc, char **argv)
     Gedim::MeshMatrices meshData;
     Gedim::MeshMatricesDAO mesh(meshData);
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::create_domain_mesh(config, domains, mesh);
+    Polydim::examples::Elliptic_PCC_DFN::program_utilities::create_domain_mesh(config, domains, mesh);
 
     Gedim::Profiler::StopTime("CreateMesh");
     Gedim::Output::PrintStatusProgram("CreateMesh");
@@ -83,9 +82,9 @@ int main(int argc, char **argv)
     Gedim::Profiler::StartTime("ComputeGeometricProperties");
 
     const auto meshGeometricData =
-        Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::create_domain_mesh_geometric_properties(config, domains, mesh);
+        Polydim::examples::Elliptic_PCC_DFN::program_utilities::create_domain_mesh_geometric_properties(config, domains, mesh);
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_domain_mesh(config, domains, mesh, meshGeometricData, exportVtuFolder);
+    Polydim::examples::Elliptic_PCC_DFN::program_utilities::export_domain_mesh(config, domains, mesh, meshGeometricData, exportVtuFolder);
 
     Gedim::Profiler::StopTime("ComputeGeometricProperties");
     Gedim::Output::PrintStatusProgram("ComputeGeometricProperties");
@@ -111,37 +110,39 @@ int main(int argc, char **argv)
     Gedim::Profiler::StopTime("CreateDiscreteSpace");
     Gedim::Output::PrintStatusProgram("CreateDiscreteSpace");
 
-    Gedim::Output::PrintGenericMessage("AssembleSystem Discrete Type " +
-                                           std::to_string(static_cast<unsigned int>(config.MethodType())) + "...",
-                                       true);
-    Gedim::Profiler::StartTime("AssembleSystem");
+    Polydim::examples::Elliptic_PCC_DFN::Assembler assembler;
+    Polydim::examples::Elliptic_PCC_DFN::Assembler::Elliptic_PCC_DFN_Problem_Data assembler_data;
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::Assembler assembler;
-    auto assembler_data =
-        assembler.Assemble(config, domains, mesh, meshGeometricData, meshDOFsInfo, dofs_data, reference_element_data, *test);
+    double time_assembler = 0.0;
+    double time_solver = 0.0;
 
-    Gedim::Profiler::StopTime("AssembleSystem");
-    Gedim::Output::PrintStatusProgram("AssembleSystem");
-
-    if (dofs_data.NumberDOFs > 0)
+    for (unsigned int i = 0; i < config.ComputationalTime(); i++)
     {
-        Gedim::Output::PrintGenericMessage("Factorize...", true);
-        Gedim::Profiler::StartTime("Factorize");
+        const auto start_time_assembler = Gedim::Profiler::GetTime();
+        Polydim::examples::Elliptic_PCC_DFN::Assembler assembler;
+        assembler_data =
+            assembler.Assemble(config, domains, mesh, meshGeometricData, meshDOFsInfo, dofs_data, reference_element_data, *test);
 
-        Gedim::Eigen_LUSolver solver;
-        solver.Initialize(assembler_data.globalMatrixA);
+        const auto end_time_assembler = Gedim::Profiler::GetTime();
 
-        Gedim::Profiler::StopTime("Factorize");
-        Gedim::Output::PrintStatusProgram("Factorize");
+        time_assembler += Gedim::Profiler::ComputeTime(start_time_assembler, end_time_assembler);
 
-        Gedim::Output::PrintGenericMessage("Solve...", true);
-        Gedim::Profiler::StartTime("Solve");
+        const auto start_time_solver = Gedim::Profiler::GetTime();
 
-        solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
+        if (dofs_data.NumberDOFs > 0)
+        {
+            Gedim::Eigen_CholeskySolver solver;
+            solver.Initialize(assembler_data.globalMatrixA);
+            solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
+        }
 
-        Gedim::Profiler::StopTime("Solve");
-        Gedim::Output::PrintStatusProgram("Solve");
+        const auto end_time_solver = Gedim::Profiler::GetTime();
+
+        time_solver += Gedim::Profiler::ComputeTime(start_time_solver, end_time_solver);
     }
+
+    time_assembler /= config.ComputationalTime();
+    time_solver /= config.ComputationalTime();
 
     Gedim::Output::PrintGenericMessage("ComputeErrors...", true);
     Gedim::Profiler::StartTime("ComputeErrors");
@@ -155,25 +156,27 @@ int main(int argc, char **argv)
     Gedim::Output::PrintGenericMessage("ExportSolution...", true);
     Gedim::Profiler::StartTime("ExportSolution");
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_solution(config,
-                                                                                    domains,
-                                                                                    mesh,
-                                                                                    meshGeometricData,
-                                                                                    dofs_data,
-                                                                                    assembler_data,
-                                                                                    post_process_data,
-                                                                                    exportSolutionFolder,
-                                                                                    exportVtuFolder);
+    Polydim::examples::Elliptic_PCC_DFN::program_utilities::export_solution(config,
+                                                                            domains,
+                                                                            mesh,
+                                                                            meshGeometricData,
+                                                                            dofs_data,
+                                                                            assembler_data,
+                                                                            post_process_data,
+                                                                            time_assembler,
+                                                                            time_solver,
+                                                                            exportSolutionFolder,
+                                                                            exportVtuFolder);
 
-    Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_dofs(config,
-                                                                                mesh,
-                                                                                meshGeometricData,
-                                                                                meshDOFsInfo,
-                                                                                dofs_data,
-                                                                                reference_element_data,
-                                                                                assembler_data,
-                                                                                post_process_data,
-                                                                                exportVtuFolder);
+    Polydim::examples::Elliptic_PCC_DFN::program_utilities::export_dofs(config,
+                                                                        mesh,
+                                                                        meshGeometricData,
+                                                                        meshDOFsInfo,
+                                                                        dofs_data,
+                                                                        reference_element_data,
+                                                                        assembler_data,
+                                                                        post_process_data,
+                                                                        exportVtuFolder);
 
     Gedim::Profiler::StopTime("ExportSolution");
     Gedim::Output::PrintStatusProgram("ExportSolution");
@@ -185,7 +188,7 @@ int main(int argc, char **argv)
     {
         const auto performance = assembler.ComputePerformance(config, mesh, meshGeometricData, reference_element_data);
 
-        Polydim::examples::Elliptic_Extended_PCC_2D::program_utilities::export_performance(config, performance, exportSolutionFolder);
+        Polydim::examples::Elliptic_PCC_DFN::program_utilities::export_performance(config, performance, exportSolutionFolder);
     }
 
     Gedim::Profiler::StopTime("ComputeMethodPerformance");

@@ -20,7 +20,7 @@ namespace Polydim
 {
 namespace examples
 {
-namespace Elliptic_Extended_PCC_2D
+namespace Elliptic_PCC_DFN
 {
 //***************************************************************************
 void Assembler::ComputeStrongTerm(const Gedim::GeometryUtilities &geometry_utilities,
@@ -34,7 +34,7 @@ void Assembler::ComputeStrongTerm(const Gedim::GeometryUtilities &geometry_utili
                                   const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
                                   const Polydim::PDETools::LocalSpace_PCC_2D::LocalSpace_Data &local_space_data,
                                   const test::I_Test &test,
-                                  Elliptic_Extended_PCC_2D_Problem_Data &assembler_data) const
+                                  Elliptic_PCC_DFN_Problem_Data &assembler_data) const
 {
     // Assemble strong boundary condition on Cell0Ds
     for (unsigned int v = 0; v < mesh.Cell2DNumberVertices(cell2D_index); ++v)
@@ -123,8 +123,8 @@ void Assembler::ComputeWeakTerm(const Gedim::GeometryUtilities &geometry_utiliti
                                 const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
                                 const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
                                 const Polydim::PDETools::LocalSpace_PCC_2D::LocalSpace_Data &local_space_data,
-                                const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test,
-                                Elliptic_Extended_PCC_2D_Problem_Data &assembler_data) const
+                                const Polydim::examples::Elliptic_PCC_DFN::test::I_Test &test,
+                                Elliptic_PCC_DFN_Problem_Data &assembler_data) const
 {
     const unsigned numVertices = mesh_geometric_data.Cell2DsVertices.at(cell2DIndex).cols();
 
@@ -217,24 +217,24 @@ void Assembler::ComputeWeakTerm(const Gedim::GeometryUtilities &geometry_utiliti
     }
 }
 // ***************************************************************************
-Assembler::Elliptic_Extended_PCC_2D_Problem_Data Assembler::Assemble(
-    const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
+Assembler::Elliptic_PCC_DFN_Problem_Data Assembler::Assemble(
+    const Polydim::examples::Elliptic_PCC_DFN::Program_configuration &config,
     const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
     const Gedim::MeshMatricesDAO &mesh,
     const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
     const Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo &mesh_dofs_info,
     const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
     const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
-    const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test) const
+    const Polydim::examples::Elliptic_PCC_DFN::test::I_Test &test) const
 {
     Gedim::GeometryUtilitiesConfig geometry_utilities_config;
     geometry_utilities_config.Tolerance1D = config.GeometricTolerance1D();
     geometry_utilities_config.Tolerance2D = config.GeometricTolerance2D();
     Gedim::GeometryUtilities geometry_utilities(geometry_utilities_config);
 
-    Elliptic_Extended_PCC_2D_Problem_Data result;
+    Elliptic_PCC_DFN_Problem_Data result;
 
-    result.globalMatrixA.SetSize(dofs_data.NumberDOFs, dofs_data.NumberDOFs, Gedim::ISparseArray::SparseArrayTypes::None);
+    result.globalMatrixA.SetSize(dofs_data.NumberDOFs, dofs_data.NumberDOFs, Gedim::ISparseArray::SparseArrayTypes::Symmetric);
     result.dirichletMatrixA.SetSize(dofs_data.NumberDOFs, dofs_data.NumberStrongs);
     result.rightHandSide.SetSize(dofs_data.NumberDOFs);
     result.solution.SetSize(dofs_data.NumberDOFs);
@@ -343,7 +343,7 @@ Assembler::Elliptic_Extended_PCC_2D_Problem_Data Assembler::Assemble(
 }
 // ***************************************************************************
 Assembler::Performance_Data Assembler::ComputePerformance(
-    const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
+    const Polydim::examples::Elliptic_PCC_DFN::Program_configuration &config,
     const Gedim::MeshMatricesDAO &mesh,
     const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
     const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data) const
@@ -371,14 +371,14 @@ Assembler::Performance_Data Assembler::ComputePerformance(
 }
 // ***************************************************************************
 Assembler::PostProcess_Data Assembler::PostProcessSolution(
-    const Polydim::examples::Elliptic_Extended_PCC_2D::Program_configuration &config,
+    const Polydim::examples::Elliptic_PCC_DFN::Program_configuration &config,
     const PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D_Collection &domains,
     const Gedim::MeshMatricesDAO &mesh,
     const PDETools::Mesh::PDE_Mesh_Utilities::Extended_MeshGeometricData2D &mesh_geometric_data,
     const Polydim::PDETools::DOFs::DOFsManager::DOFsData &dofs_data,
     const Polydim::PDETools::LocalSpace_PCC_2D::ReferenceElement_Data &reference_element_data,
-    const Elliptic_Extended_PCC_2D_Problem_Data &assembler_data,
-    const Polydim::examples::Elliptic_Extended_PCC_2D::test::I_Test &test) const
+    const Elliptic_PCC_DFN_Problem_Data &assembler_data,
+    const Polydim::examples::Elliptic_PCC_DFN::test::I_Test &test) const
 {
     Gedim::GeometryUtilitiesConfig geometry_utilities_config;
     geometry_utilities_config.Tolerance1D = config.GeometricTolerance1D();
@@ -544,6 +544,6 @@ Assembler::PostProcess_Data Assembler::PostProcessSolution(
 
     return result;
 }
-} // namespace Elliptic_Extended_PCC_2D
+} // namespace Elliptic_PCC_DFN
 } // namespace examples
 } // namespace Polydim
