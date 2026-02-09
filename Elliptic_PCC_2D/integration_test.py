@@ -130,34 +130,34 @@ def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_e
         fig, ax = plt.subplots(figsize=(12, 12))
 
         errors = list_errors_fem[method_order - 1]
-        ax.plot(errors[:, 0], errors[:, 3], '-k^', linewidth=2, markersize=14,
+        ax.plot(errors[:, 0], errors[:, 3], '-k^', linewidth=2, markersize=17,
                 label="FEM")
 
         for h in range(len(method_types)):
 
             if method_types[h] == 1:
                 errors = list_errors[h]
-                ax.plot(errors[:, 0], errors[:, 3], '-ro', linewidth=2, markersize=12,
+                ax.plot(errors[:, 0], errors[:, 3], '-ro', linewidth=2, markersize=15,
                         label="VEM")
             elif method_types[h] == 4:
                 errors = list_errors[h]
-                ax.plot(errors[:, 0], errors[:, 3], '-bs', linewidth=2, markersize=12,
+                ax.plot(errors[:, 0], errors[:, 3], '-bs', linewidth=2, markersize=15,
                         label="Z-FEM")
             else:
                 raise ValueError("Not valid method type")
 
         errors = list_errors_fem[method_order - 1]
-        ax.plot(errors[:, 0], errors[:, 4], '--k^', linewidth=2, markersize=14,
+        ax.plot(errors[:, 0], errors[:, 4], '--k^', linewidth=2, markersize=17,
                 label="FEM")
 
         for h in range(len(method_types)):
             if method_types[h] == 1:
                 errors = list_errors[h]
-                ax.plot(errors[:, 0], errors[:, 4], '--ro', linewidth=2, markersize=12,
+                ax.plot(errors[:, 0], errors[:, 4], '--ro', linewidth=2, markersize=15,
                         label="VEM")
             elif method_types[h] == 4:
                 errors = list_errors[h]
-                ax.plot(errors[:, 0], errors[:, 4], '--bs', linewidth=2, markersize=12,
+                ax.plot(errors[:, 0], errors[:, 4], '--bs', linewidth=2, markersize=15,
                         label="Z-FEM")
             else:
                 raise ValueError("Not valid method type")
@@ -171,11 +171,11 @@ def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_e
         ordered_labels = [labels[i] for i in ll]
 
         plt.legend(ordered_handles, ordered_labels, bbox_to_anchor=(0., 1.02, 1.0, 0.2), loc="lower left",
-                   mode="expand", borderaxespad=0, ncol=3, fontsize=30)
+                   mode="expand", borderaxespad=0, ncol=3, fontsize=40)
 
-        plt.xlabel('$N_{\\mathrm{dof}}$', fontsize=30)
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
+        plt.xlabel('$N_{\\mathrm{dof}}$', fontsize=40)
+        plt.xticks(fontsize=40)
+        plt.yticks(fontsize=40)
         plt.xscale('log')
         plt.yscale('log')
         plt.grid(True, which="both", ls="--")
@@ -187,29 +187,29 @@ def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_e
         fig, ax = plt.subplots(figsize=(12, 12))
 
         errors = list_errors_fem_2[method_order - 1]
-        ax.plot(errors[:, 0], errors[:, 9], '-k^', linewidth=2, markersize=14,
+        ax.plot(errors[:, 0], errors[:, 9], '-k^', linewidth=2, markersize=17,
                 label="FEM")
 
         for h in range(len(method_types)):
 
             if method_types[h] == 1:
                 errors = list_errors[h]
-                ax.plot(errors[:, 0], errors[:, 9], '-ro', linewidth=2, markersize=12,
+                ax.plot(errors[:, 0], errors[:, 9], '-ro', linewidth=2, markersize=15,
                         label="VEM")
             elif method_types[h] == 4:
                 errors = list_errors[h]
-                ax.plot(errors[:, 0], errors[:, 9], '-bs', linewidth=2, markersize=12,
+                ax.plot(errors[:, 0], errors[:, 9], '-bs', linewidth=2, markersize=15,
                         label="Z-FEM")
             else:
                 raise ValueError("Not valid method type")
 
         plt.legend(bbox_to_anchor=(0., 1.02, 1.0, 0.2), loc="lower left",
-                   mode="expand", borderaxespad=0, ncol=3, fontsize=30)
+                   mode="expand", borderaxespad=0, ncol=3, fontsize=40)
 
-        plt.xlabel('$N_{\\mathrm{dof}}$', fontsize=30)
-        plt.ylabel('$\\mathrm{cond}(\\mathbf{A})$', fontsize=30)
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
+        plt.xlabel('$N_{\\mathrm{dof}}$', fontsize=40)
+        plt.ylabel('$\\mathrm{cond}(\\mathbf{A})$', fontsize=40)
+        plt.xticks(fontsize=40)
+        plt.yticks(fontsize=40)
         plt.xscale('log')
         plt.yscale('log')
         plt.grid(True, which="both", ls="--")
@@ -219,30 +219,62 @@ def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_e
 
     if plot_time:
         fig, ax = plt.subplots(figsize=(12, 12))
-        errors = list_errors_fem[method_order - 1]
-        x = np.arange(len(errors[:, 0]))
-        width = 0.22
 
-        methods = ["FEM", "VEM", "Z-FEM"]
+        errors = list_errors_fem_2[method_order - 1]
+        ax.plot(errors[:, 0], errors[:, 10], ':k^', linewidth=2, markersize=17,
+                label="FEM")
 
-        for i, method in enumerate(methods):
-            if i == 0:
-                errors = list_errors_fem[method_order - 1]
+        ax.plot(errors[:, 0], errors[:, 11], '--k^', linewidth=2, markersize=17,
+                label="FEM")
+
+        ax.plot(errors[:, 0], errors[:, 10] + errors[:, 11], '-k^', linewidth=2, markersize=17,
+                label="FEM")
+
+        for h in range(len(method_types)):
+
+            if method_types[h] == 1:
+                errors = list_errors[h]
+                ax.plot(errors[:, 0], errors[:, 10], ':ro', linewidth=2, markersize=15,
+                        label="VEM")
+
+                ax.plot(errors[:, 0], errors[:, 11], '--ro', linewidth=2, markersize=15,
+                        label="VEM")
+
+                ax.plot(errors[:, 0], errors[:, 10] + errors[:, 11], '-ro', linewidth=2, markersize=15,
+                        label="VEM")
+            elif method_types[h] == 4:
+                errors = list_errors[h]
+                ax.plot(errors[:, 0], errors[:, 10], ':bs', linewidth=2, markersize=15,
+                        label="Z-FEM")
+
+                ax.plot(errors[:, 0], errors[:, 11], '--bs', linewidth=2, markersize=15,
+                        label="Z-FEM")
+
+                ax.plot(errors[:, 0], errors[:, 10] + errors[:, 11], '-bs', linewidth=2, markersize=15,
+                        label="Z-FEM")
             else:
-                errors = list_errors[i - 1]
-            plt.bar(x + i * width, errors[:, 10], width,
-                    label=f"{method} – Assembler")
-            plt.bar(x + i * width, errors[:, 11], width,
-                    bottom=errors[:, 10],
-                    label=f"{method} – Solver")
+                raise ValueError("Not valid method type")
 
+        # Get handles and labels
+        handles, labels = plt.gca().get_legend_handles_labels()
+
+        # Reorder them by row (instead of column)
+        ll = [2, 5, 8]
+        ordered_handles = [handles[i] for i in ll]
+        ordered_labels = [labels[i] for i in ll]
+
+        plt.legend(ordered_handles, ordered_labels, bbox_to_anchor=(0., 1.02, 1.0, 0.2), loc="lower left",
+                   mode="expand", borderaxespad=0, ncol=3, fontsize=40)
+
+        plt.xscale("log")
         plt.yscale("log")
-        plt.xticks(x + width, errors[:, 0])
-        plt.xlabel('$N_{\\mathrm{dof}}$', fontsize=30)
-        plt.ylabel("Tempo [ms] (log)")
-        # plt.title("Confronto tempi (barplot stacked, asse y log)")
-        plt.legend(ncol=3, fontsize=8)
-        plt.tight_layout()
+        plt.xticks(fontsize=40)
+        plt.yticks(fontsize=40)
+        plt.xlabel('$N_{\\mathrm{dof}}$', fontsize=40)
+        plt.ylabel("Time [ms]", fontsize=40)
+        plt.grid(True, which="both", ls="--")
+        plt.savefig(export_folder + "/{}_{}_{}_time.png".format(test_type, method_order, name_test),
+                    bbox_inches='tight', dpi=300)
         plt.show()
 
 
@@ -259,20 +291,93 @@ if __name__ == "__main__":
     plot_err = False
     plot_time = False
     plot_conditioning = False
+    compute_conditioning = True
+    num_code_executions = 5
 
-    on_cluster = False
+    on_cluster = True
 
     print("RUN TESTS...")
 
-    if not on_cluster:
-        test_type = 3
-        mesh_generator = 0
-        method_type = 0
-        mesh_max_areas = [0.05, 0.02, 0.01, 0.005, 0.0025]
-        method_orders = [1, 2, 3, 4, 5, 6]
-        list_errors_fem = []
+
+    test_type = 3
+    mesh_generator = 0
+    method_type = 0
+    mesh_max_areas = [0.05, 0.02, 0.01, 0.005, 0.0025]
+    method_orders = [1, 2, 3, 4, 5, 6]
+    list_errors_fem = []
+    vv = 0
+    for method_order in method_orders:
+        num_ref = 0
+        for mesh_max_area in mesh_max_areas:
+            export_path = run_program(program_folder,
+                                      program_path,
+                                      "Run_MG{0}".format(mesh_generator),
+                                      method_type,
+                                      method_order,
+                                      test_type,
+                                      mesh_generator,
+                                      num_ref,
+                                      sub_triangulate=False,
+                                      compute_conditioning=compute_conditioning,
+                                      num_code_executions=num_code_executions,
+                                      mesh_max_area=mesh_max_area,
+                                      mesh_import_path="./", )
+            num_ref += 1
+
+        errors = import_errors(export_path, method_type, method_order, test_type)
+        test_errors(errors,
+                    method_order,
+                    tol)
+        list_errors_fem.append(np.array(errors[1:]))
+
+        if remove_folder:
+            os.system("rm -rf " + os.path.join(program_folder, export_path))
+
+    test_type = 3
+    mesh_generator = 2
+    method_type = 0
+    mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
+    method_orders = [1, 2, 3, 4, 5, 6]
+    list_errors_fem_2 = []
+    vv = 0
+    for method_order in method_orders:
+        num_ref = 0
+        for mesh_max_area in mesh_max_areas:
+            export_path = run_program(program_folder,
+                                      program_path,
+                                      "Run_MG{0}".format(mesh_generator),
+                                      method_type,
+                                      method_order,
+                                      test_type,
+                                      mesh_generator,
+                                      num_ref,
+                                      sub_triangulate=True,
+                                      compute_conditioning=compute_conditioning,
+                                      num_code_executions=num_code_executions,
+                                      mesh_max_area=mesh_max_area,
+                                      mesh_import_path="./", )
+            num_ref += 1
+
+        errors = import_errors(export_path, method_type, method_order, test_type)
+        test_errors(errors,
+                    method_order,
+                    tol)
+        list_errors_fem_2.append(np.array(errors[1:]))
+
+        if remove_folder:
+            os.system("rm -rf " + os.path.join(program_folder, export_path))
+
+    test_type = 3
+    mesh_generator = 2
+    method_types = [1, 4]
+    mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
+    method_orders = [1, 2, 3, 4, 5, 6]
+    name_test = "voro"
+    table_order = np.zeros([len(method_types) * 2, len(method_orders)])
+    for method_order in method_orders:
+        list_errors = []
         vv = 0
-        for method_order in method_orders:
+        for method_type in method_types:
             num_ref = 0
             for mesh_max_area in mesh_max_areas:
                 export_path = run_program(program_folder,
@@ -284,29 +389,78 @@ if __name__ == "__main__":
                                           mesh_generator,
                                           num_ref,
                                           sub_triangulate=False,
-                                          compute_conditioning=True,
-                                          num_code_executions=5,
+                                          compute_conditioning=compute_conditioning,
+                                          num_code_executions=num_code_executions,
                                           mesh_max_area=mesh_max_area,
-                                          mesh_import_path="./", )
+                                          mesh_import_path="./")
                 num_ref += 1
 
             errors = import_errors(export_path, method_type, method_order, test_type)
-            test_errors(errors,
-                        method_order,
-                        tol)
-            list_errors_fem.append(np.array(errors[1:]))
+            slope_L2, slope_H1 = test_errors(errors,
+                                             method_order,
+                                             tol)
+
+            table_order[2 * vv, method_order - 1] = slope_L2
+            table_order[2 * vv + 1, method_order - 1] = slope_H1
+
+            vv += 1
+
+            list_errors.append(np.array(errors[1:]))
 
             if remove_folder:
                 os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-        test_type = 3
-        mesh_generator = 2
-        method_type = 0
-        mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
-        method_orders = [1, 2, 3, 4, 5, 6]
-        list_errors_fem_2 = []
+        plot_errors(list_errors, list_errors_fem_2, method_order, method_types, plot_err, plot_time,
+                    plot_conditioning)
+
+    with np.printoptions(precision=2):
+        print(table_order)
+
+    test_type = 3
+    mesh_generator = 6
+    method_type = 0
+    mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
+    method_orders = [1, 2, 3, 4, 5, 6]
+    list_errors_fem_3 = []
+    vv = 0
+    for method_order in method_orders:
+        num_ref = 0
+        for mesh_max_area in mesh_max_areas:
+            export_path = run_program(program_folder,
+                                      program_path,
+                                      "Run_MG{0}".format(mesh_generator),
+                                      method_type,
+                                      method_order,
+                                      test_type,
+                                      mesh_generator,
+                                      num_ref,
+                                      sub_triangulate=True,
+                                      compute_conditioning=compute_conditioning,
+                                      num_code_executions=num_code_executions,
+                                      mesh_max_area=mesh_max_area,
+                                      mesh_import_path="./", )
+            num_ref += 1
+
+        errors = import_errors(export_path, method_type, method_order, test_type)
+        test_errors(errors,
+                    method_order,
+                    tol)
+        list_errors_fem_3.append(np.array(errors[1:]))
+
+        if remove_folder:
+            os.system("rm -rf " + os.path.join(program_folder, export_path))
+
+    test_type = 3
+    mesh_generator = 6
+    method_types = [1, 4]
+    mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
+    method_orders = [1, 2, 3, 4, 5, 6]
+    name_test = "rdquad"
+    table_order = np.zeros([len(method_types) * 2, len(method_orders)])
+    for method_order in method_orders:
+        list_errors = []
         vv = 0
-        for method_order in method_orders:
+        for method_type in method_types:
             num_ref = 0
             for mesh_max_area in mesh_max_areas:
                 export_path = run_program(program_folder,
@@ -317,79 +471,88 @@ if __name__ == "__main__":
                                           test_type,
                                           mesh_generator,
                                           num_ref,
-                                          sub_triangulate=True,
-                                          compute_conditioning=True,
-                                          num_code_executions=5,
+                                          sub_triangulate=False,
+                                          compute_conditioning=compute_conditioning,
+                                          num_code_executions=num_code_executions,
                                           mesh_max_area=mesh_max_area,
-                                          mesh_import_path="./", )
+                                          mesh_import_path="./")
                 num_ref += 1
 
             errors = import_errors(export_path, method_type, method_order, test_type)
-            test_errors(errors,
-                        method_order,
-                        tol)
-            list_errors_fem_2.append(np.array(errors[1:]))
+
+            slope_L2, slope_H1 = test_errors(errors,
+                                             method_order,
+                                             tol)
+
+            table_order[2 * vv, method_order - 1] = slope_L2
+            table_order[2 * vv + 1, method_order - 1] = slope_H1
+
+            vv += 1
+
+            list_errors.append(np.array(errors[1:]))
 
             if remove_folder:
                 os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-        test_type = 3
-        mesh_generator = 2
-        method_types = [1, 4]
-        mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
-        method_orders = [1, 2, 3, 4, 5, 6]
-        name_test = "voro"
-        table_order = np.zeros([len(method_types) * 2, len(method_orders)])
-        for method_order in method_orders:
-            list_errors = []
-            vv = 0
-            for method_type in method_types:
-                num_ref = 0
-                for mesh_max_area in mesh_max_areas:
-                    export_path = run_program(program_folder,
-                                              program_path,
-                                              "Run_MG{0}".format(mesh_generator),
-                                              method_type,
-                                              method_order,
-                                              test_type,
-                                              mesh_generator,
-                                              num_ref,
-                                              sub_triangulate=False,
-                                              compute_conditioning=True,
-                                              num_code_executions=5,
-                                              mesh_max_area=mesh_max_area,
-                                              mesh_import_path="./")
-                    num_ref += 1
+        plot_errors(list_errors, list_errors_fem_3, method_order, method_types, plot_err, plot_time,
+                    plot_conditioning)
 
-                errors = import_errors(export_path, method_type, method_order, test_type)
-                slope_L2, slope_H1 = test_errors(errors,
-                                                 method_order,
-                                                 tol)
+    with np.printoptions(precision=2):
+        print(table_order)
 
-                table_order[2 * vv, method_order - 1] = slope_L2
-                table_order[2 * vv + 1, method_order - 1] = slope_H1
+    test_type = 3
+    mesh_generator = 4
+    method_type = 0
+    mesh_max_areas = [program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_3x3",
+                      program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_6x6",
+                      program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_9x9",
+                      program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_12x12",
+                      program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_15x15"]
+    method_orders = [1, 2, 3, 4, 5, 6]
+    list_errors_fem_4 = []
+    vv = 0
+    for method_order in method_orders:
+        num_ref = 0
+        for mesh_max_area in mesh_max_areas:
+            export_path = run_program(program_folder,
+                                      program_path,
+                                      "Run_MG{0}".format(mesh_generator),
+                                      method_type,
+                                      method_order,
+                                      test_type,
+                                      mesh_generator,
+                                      num_ref,
+                                      sub_triangulate=True,
+                                      compute_conditioning=compute_conditioning,
+                                      num_code_executions=num_code_executions,
+                                      mesh_max_area=0.0,
+                                      mesh_import_path=mesh_max_area)
+            num_ref += 1
 
-                vv += 1
+        errors = import_errors(export_path, method_type, method_order, test_type)
+        test_errors(errors,
+                    method_order,
+                    tol)
+        list_errors_fem_4.append(np.array(errors[1:]))
 
-                list_errors.append(np.array(errors[1:]))
+        if remove_folder:
+            os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-                if remove_folder:
-                    os.system("rm -rf " + os.path.join(program_folder, export_path))
-
-            plot_errors(list_errors, list_errors_fem_2, method_order, method_types, plot_err, plot_time,
-                        plot_conditioning)
-
-        with np.printoptions(precision=2):
-            print(table_order)
-
-        test_type = 3
-        mesh_generator = 6
-        method_type = 0
-        mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
-        method_orders = [1, 2, 3, 4, 5, 6]
-        list_errors_fem_3 = []
+    test_type = 3
+    mesh_generator = 4
+    method_types = [1, 4]
+    mesh_max_areas = [program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_3x3",
+                      program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_6x6",
+                      program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_9x9",
+                      program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_12x12",
+                      program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_15x15"]
+    method_orders = [1, 2, 3, 4, 5, 6]
+    name_test = "conc_struct"
+    table_order = np.zeros([len(method_types) * 2, len(method_orders)])
+    for method_order in method_orders:
+        list_errors = []
         vv = 0
-        for method_order in method_orders:
+        for method_type in method_types:
             num_ref = 0
             for mesh_max_area in mesh_max_areas:
                 export_path = run_program(program_folder,
@@ -400,207 +563,78 @@ if __name__ == "__main__":
                                           test_type,
                                           mesh_generator,
                                           num_ref,
-                                          sub_triangulate=True,
-                                          compute_conditioning=True,
-                                          num_code_executions=5,
-                                          mesh_max_area=mesh_max_area,
-                                          mesh_import_path="./", )
-                num_ref += 1
-
-            errors = import_errors(export_path, method_type, method_order, test_type)
-            test_errors(errors,
-                        method_order,
-                        tol)
-            list_errors_fem_3.append(np.array(errors[1:]))
-
-            if remove_folder:
-                os.system("rm -rf " + os.path.join(program_folder, export_path))
-
-        test_type = 3
-        mesh_generator = 6
-        method_types = [1, 4]
-        mesh_max_areas = [0.1, 0.05, 0.02, 0.01, 0.005]
-        method_orders = [1, 2, 3, 4, 5, 6]
-        name_test = "rdquad"
-        table_order = np.zeros([len(method_types) * 2, len(method_orders)])
-        for method_order in method_orders:
-            list_errors = []
-            vv = 0
-            for method_type in method_types:
-                num_ref = 0
-                for mesh_max_area in mesh_max_areas:
-                    export_path = run_program(program_folder,
-                                              program_path,
-                                              "Run_MG{0}".format(mesh_generator),
-                                              method_type,
-                                              method_order,
-                                              test_type,
-                                              mesh_generator,
-                                              num_ref,
-                                              sub_triangulate=False,
-                                              compute_conditioning=True,
-                                              num_code_executions=5,
-                                              mesh_max_area=mesh_max_area,
-                                              mesh_import_path="./")
-                    num_ref += 1
-
-                errors = import_errors(export_path, method_type, method_order, test_type)
-
-                slope_L2, slope_H1 = test_errors(errors,
-                                                 method_order,
-                                                 tol)
-
-                table_order[2 * vv, method_order - 1] = slope_L2
-                table_order[2 * vv + 1, method_order - 1] = slope_H1
-
-                vv += 1
-
-                list_errors.append(np.array(errors[1:]))
-
-                if remove_folder:
-                    os.system("rm -rf " + os.path.join(program_folder, export_path))
-
-            plot_errors(list_errors, list_errors_fem_3, method_order, method_types, plot_err, plot_time,
-                        plot_conditioning)
-
-        with np.printoptions(precision=2):
-            print(table_order)
-
-        test_type = 3
-        mesh_generator = 4
-        method_type = 0
-        mesh_max_areas = [program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_3x3",
-                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_6x6",
-                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_9x9",
-                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_12x12",
-                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_15x15"]
-        method_orders = [1, 2, 3, 4, 5, 6]
-        list_errors_fem_4 = []
-        vv = 0
-        for method_order in method_orders:
-            num_ref = 0
-            for mesh_max_area in mesh_max_areas:
-                export_path = run_program(program_folder,
-                                          program_path,
-                                          "Run_MG{0}".format(mesh_generator),
-                                          method_type,
-                                          method_order,
-                                          test_type,
-                                          mesh_generator,
-                                          num_ref,
-                                          sub_triangulate=True,
-                                          compute_conditioning=True,
-                                          num_code_executions=5,
+                                          sub_triangulate=False,
+                                          compute_conditioning=compute_conditioning,
+                                          num_code_executions=num_code_executions,
                                           mesh_max_area=0.0,
-                                          mesh_import_path=mesh_max_area, )
+                                          mesh_import_path=mesh_max_area)
                 num_ref += 1
 
             errors = import_errors(export_path, method_type, method_order, test_type)
-            test_errors(errors,
-                        method_order,
-                        tol)
-            list_errors_fem_4.append(np.array(errors[1:]))
+            slope_L2, slope_H1 = test_errors(errors,
+                                             method_order,
+                                             tol)
+
+            table_order[2 * vv, method_order - 1] = slope_L2
+            table_order[2 * vv + 1, method_order - 1] = slope_H1
+            vv += 1
+            list_errors.append(np.array(errors[1:]))
 
             if remove_folder:
                 os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-        test_type = 3
-        mesh_generator = 4
-        method_types = [1, 4]
-        mesh_max_areas = [program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_3x3",
-                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_6x6",
-                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_9x9",
-                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_12x12",
-                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_15x15"]
-        method_orders = [1, 2, 3, 4, 5, 6]
-        name_test = "conc_struct"
-        table_order = np.zeros([len(method_types) * 2, len(method_orders)])
-        for method_order in method_orders:
-            list_errors = []
-            vv = 0
-            for method_type in method_types:
-                num_ref = 0
-                for mesh_max_area in mesh_max_areas:
-                    export_path = run_program(program_folder,
-                                              program_path,
-                                              "Run_MG{0}".format(mesh_generator),
-                                              method_type,
-                                              method_order,
-                                              test_type,
-                                              mesh_generator,
-                                              num_ref,
-                                              sub_triangulate=False,
-                                              compute_conditioning=True,
-                                              num_code_executions=5,
-                                              mesh_max_area=0.0,
-                                              mesh_import_path=mesh_max_area)
-                    num_ref += 1
+        plot_errors(list_errors, list_errors_fem_4, method_order, method_types, plot_err, plot_time,
+                    plot_conditioning)
 
-                errors = import_errors(export_path, method_type, method_order, test_type)
-                slope_L2, slope_H1 = test_errors(errors,
-                                                 method_order,
-                                                 tol)
+    with np.printoptions(precision=2):
+        print(table_order)
 
-                table_order[2 * vv, method_order - 1] = slope_L2
-                table_order[2 * vv + 1, method_order - 1] = slope_H1
-                vv += 1
-                list_errors.append(np.array(errors[1:]))
+    test_type = 3
+    mesh_generator = 0
+    method_types = [1, 4]
+    mesh_max_areas = [0.05, 0.02, 0.01, 0.005, 0.0025]
+    method_orders = [1, 2, 3, 4, 5, 6]
+    name_test = "triangle"
+    table_order = np.zeros([len(method_types) * 2, len(method_orders)])
+    for method_order in method_orders:
+        list_errors = []
+        vv = 0
+        for method_type in method_types:
+            num_ref = 0
+            for mesh_max_area in mesh_max_areas:
+                export_path = run_program(program_folder,
+                                          program_path,
+                                          "Run_MG{0}".format(mesh_generator),
+                                          method_type,
+                                          method_order,
+                                          test_type,
+                                          mesh_generator,
+                                          num_ref,
+                                          sub_triangulate=False,
+                                          compute_conditioning=compute_conditioning,
+                                          num_code_executions=num_code_executions,
+                                          mesh_max_area=mesh_max_area,
+                                          mesh_import_path="./")
+                num_ref += 1
 
-                if remove_folder:
-                    os.system("rm -rf " + os.path.join(program_folder, export_path))
+            errors = import_errors(export_path, method_type, method_order, test_type)
+            slope_L2, slope_H1 = test_errors(errors,
+                                             method_order,
+                                             tol)
 
-            plot_errors(list_errors, list_errors_fem_4, method_order, method_types, plot_err, plot_time,
-                        plot_conditioning)
+            table_order[2 * vv, method_order - 1] = slope_L2
+            table_order[2 * vv + 1, method_order - 1] = slope_H1
+            vv += 1
+            list_errors.append(np.array(errors[1:]))
 
-        with np.printoptions(precision=2):
-            print(table_order)
+            if remove_folder:
+                os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-        test_type = 3
-        mesh_generator = 0
-        method_types = [1, 4]
-        mesh_max_areas = [0.05, 0.02, 0.01, 0.005, 0.0025]
-        method_orders = [1, 2, 3, 4, 5, 6]
-        name_test = "triangle"
-        table_order = np.zeros([len(method_types) * 2, len(method_orders)])
-        for method_order in method_orders:
-            list_errors = []
-            vv = 0
-            for method_type in method_types:
-                num_ref = 0
-                for mesh_max_area in mesh_max_areas:
-                    export_path = run_program(program_folder,
-                                              program_path,
-                                              "Run_MG{0}".format(mesh_generator),
-                                              method_type,
-                                              method_order,
-                                              test_type,
-                                              mesh_generator,
-                                              num_ref,
-                                              sub_triangulate=False,
-                                              compute_conditioning=True,
-                                              num_code_executions=5,
-                                              mesh_max_area=mesh_max_area,
-                                              mesh_import_path="./")
-                    num_ref += 1
+        plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_err, plot_time,
+                    plot_conditioning)
 
-                errors = import_errors(export_path, method_type, method_order, test_type)
-                slope_L2, slope_H1 = test_errors(errors,
-                                                 method_order,
-                                                 tol)
-
-                table_order[2 * vv, method_order - 1] = slope_L2
-                table_order[2 * vv + 1, method_order - 1] = slope_H1
-                vv += 1
-                list_errors.append(np.array(errors[1:]))
-
-                if remove_folder:
-                    os.system("rm -rf " + os.path.join(program_folder, export_path))
-
-            plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_err, plot_time,
-                        plot_conditioning)
-
-        with np.printoptions(precision=2):
-            print(table_order)
+    with np.printoptions(precision=2):
+        print(table_order)
 
     if on_cluster:
         test_type = 3
@@ -615,15 +649,15 @@ if __name__ == "__main__":
             for mesh_max_area in mesh_max_areas:
                 export_path = run_program(program_folder,
                                           program_path,
-                                          "Run_MG{0}".format(mesh_generator),
+                                          "Run_TIME_MG{0}".format(mesh_generator),
                                           method_type,
                                           method_order,
                                           test_type,
                                           mesh_generator,
                                           num_ref,
                                           sub_triangulate=True,
-                                          compute_conditioning=True,
-                                          num_code_executions=5,
+                                          compute_conditioning=False,
+                                          num_code_executions=num_code_executions,
                                           mesh_max_area=mesh_max_area,
                                           mesh_import_path="./", )
                 num_ref += 1
@@ -645,15 +679,15 @@ if __name__ == "__main__":
                 for mesh_max_area in mesh_max_areas:
                     export_path = run_program(program_folder,
                                               program_path,
-                                              "Run_MG{0}".format(mesh_generator),
+                                              "Run_TIME_MG{0}".format(mesh_generator),
                                               method_type,
                                               method_order,
                                               test_type,
                                               mesh_generator,
                                               num_ref,
                                               sub_triangulate=False,
-                                              compute_conditioning=True,
-                                              num_code_executions=5,
+                                              compute_conditioning=False,
+                                              num_code_executions=num_code_executions,
                                               mesh_max_area=mesh_max_area,
                                               mesh_import_path="./")
                     num_ref += 1
@@ -661,9 +695,13 @@ if __name__ == "__main__":
                 errors = import_errors(export_path, method_type, method_order, test_type)
 
                 vv += 1
+                list_errors.append(np.array(errors[1:]))
 
                 if remove_folder:
                     os.system("rm -rf " + os.path.join(program_folder, export_path))
+
+            plot_errors(list_errors, list_errors_fem, method_order, method_types, False, plot_time,
+                        False)
 
     if remove_folder:
         os.system("rm -rf " + os.path.join(program_folder, export_folder))

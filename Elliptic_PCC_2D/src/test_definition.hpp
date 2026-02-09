@@ -365,10 +365,10 @@ struct Computational_Comparison final : public I_Test
   public:
     Computational_Comparison()
     {
-      eps = 1.0e-13;
-      c = 2;
-      s = (0.5 * M_PI) * exp(c);
-      power = 20.0;
+        eps = 1.0e-13;
+        c = 2;
+        s = (0.5 * M_PI) * exp(c);
+        power = 20.0;
     }
 
     Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
@@ -401,15 +401,15 @@ struct Computational_Comparison final : public I_Test
 
     std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
     {
-      return {Eigen::VectorXd::Constant(points.cols(), 1.0),
-              Eigen::VectorXd::Constant(points.cols(), 0.0),
-              Eigen::VectorXd::Zero(points.cols()),
-              Eigen::VectorXd::Constant(points.cols(), 0.0),
-              Eigen::VectorXd::Constant(points.cols(), 1.0),
-              Eigen::VectorXd::Zero(points.cols()),
-              Eigen::VectorXd::Zero(points.cols()),
-              Eigen::VectorXd::Zero(points.cols()),
-              Eigen::VectorXd::Constant(points.cols(), 0.0)};
+        return {Eigen::VectorXd::Constant(points.cols(), 1.0),
+                Eigen::VectorXd::Constant(points.cols(), 0.0),
+                Eigen::VectorXd::Zero(points.cols()),
+                Eigen::VectorXd::Constant(points.cols(), 0.0),
+                Eigen::VectorXd::Constant(points.cols(), 1.0),
+                Eigen::VectorXd::Zero(points.cols()),
+                Eigen::VectorXd::Zero(points.cols()),
+                Eigen::VectorXd::Zero(points.cols()),
+                Eigen::VectorXd::Constant(points.cols(), 0.0)};
     };
 
     Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
@@ -419,50 +419,48 @@ struct Computational_Comparison final : public I_Test
 
     Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
     {
-      const Eigen::Index n = points.cols();
-         Eigen::VectorXd lap(n);
-         lap.setZero();
+        const Eigen::Index n = points.cols();
+        Eigen::VectorXd lap(n);
+        lap.setZero();
 
-         for (Eigen::Index i = 0; i < n; ++i)
-         {
-             const double x = points(0, i);
-             const double y = points(1, i);
+        for (Eigen::Index i = 0; i < n; ++i)
+        {
+            const double x = points(0, i);
+            const double y = points(1, i);
 
-             const double xb = x + eps;
-             const double yb = y + eps;
+            const double xb = x + eps;
+            const double yb = y + eps;
 
-             if (std::abs(xb) < eps || std::abs(yb) < eps)
-                 throw std::runtime_error("error on f evaluation, NaN");
+            if (std::abs(xb) < eps || std::abs(yb) < eps)
+                throw std::runtime_error("error on f evaluation, NaN");
 
-             // Helpers for x
-             const double Ex = std::exp(-c / xb);
-             const double Ax = s * Ex;
-             const double Fx = 1.0 - std::cos(Ax);
+            // Helpers for x
+            const double Ex = std::exp(-c / xb);
+            const double Ax = s * Ex;
+            const double Fx = 1.0 - std::cos(Ax);
 
-             // F''(x)
-             const double xb2 = xb * xb;
-             const double xb4 = xb2 * xb2;
-             const double common_x = (c * s * Ex) / xb4; // (cs e^{-c/(x+b)})/(x+b)^4
-             const double Fxx =
-                 common_x * ( (c * s * Ex) * std::cos(Ax) + (c - 2.0 * xb) * std::sin(Ax) );
+            // F''(x)
+            const double xb2 = xb * xb;
+            const double xb4 = xb2 * xb2;
+            const double common_x = (c * s * Ex) / xb4; // (cs e^{-c/(x+b)})/(x+b)^4
+            const double Fxx = common_x * ((c * s * Ex) * std::cos(Ax) + (c - 2.0 * xb) * std::sin(Ax));
 
-             // Helpers for y
-             const double Ey = std::exp(-c / yb);
-             const double Ay = s * Ey;
-             const double Gy = 1.0 - std::cos(Ay);
+            // Helpers for y
+            const double Ey = std::exp(-c / yb);
+            const double Ay = s * Ey;
+            const double Gy = 1.0 - std::cos(Ay);
 
-             // G''(y)
-             const double yb2 = yb * yb;
-             const double yb4 = yb2 * yb2;
-             const double common_y = (c * s * Ey) / yb4;
-             const double Gyy =
-                 common_y * ( (c * s * Ey) * std::cos(Ay) + (c - 2.0 * yb) * std::sin(Ay) );
+            // G''(y)
+            const double yb2 = yb * yb;
+            const double yb4 = yb2 * yb2;
+            const double common_y = (c * s * Ey) / yb4;
+            const double Gyy = common_y * ((c * s * Ey) * std::cos(Ay) + (c - 2.0 * yb) * std::sin(Ay));
 
-             // Laplacian: Δu = p [F''(x) G(y) + F(x) G''(y)]
-             lap(i) = power * (Fxx * Gy + Fx * Gyy);
-         }
+            // Laplacian: Δu = p [F''(x) G(y) + F(x) G''(y)]
+            lap(i) = power * (Fxx * Gy + Fx * Gyy);
+        }
 
-         return -lap;
+        return -lap;
     };
 
     Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
@@ -484,33 +482,24 @@ struct Computational_Comparison final : public I_Test
 
     Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
     {
-      return power *
-          (1.0 - cos(exp(-c / (points.row(0).array() + eps)) * s)) *
-          (1.0 - cos(exp(-c / (points.row(1).array() + eps)) * s));
+        return power * (1.0 - cos(exp(-c / (points.row(0).array() + eps)) * s)) *
+               (1.0 - cos(exp(-c / (points.row(1).array() + eps)) * s));
     };
 
     std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
     {
-      return
-      {
-        power *
-            sin(exp(-c / (points.row(0).array() + eps)) * s) *
-            (1.0 - cos(exp(-c / (points.row(1).array() + eps)) * s)) *
-            s * exp(-c / (points.row(0).array() + eps)) *
-            c / (points.row(0).array() + eps).square(),
+        return {power * sin(exp(-c / (points.row(0).array() + eps)) * s) *
+                    (1.0 - cos(exp(-c / (points.row(1).array() + eps)) * s)) * s *
+                    exp(-c / (points.row(0).array() + eps)) * c / (points.row(0).array() + eps).square(),
 
-            power *
-            sin(exp(-c / (points.row(1).array() + eps)) * s) *
-            (1.0 - cos(exp(-c / (points.row(0).array() + eps)) * s)) *
-            s * exp(-c / (points.row(1).array() + eps)) *
-            c / (points.row(1).array() + eps).square(),
+                power * sin(exp(-c / (points.row(1).array() + eps)) * s) *
+                    (1.0 - cos(exp(-c / (points.row(0).array() + eps)) * s)) * s *
+                    exp(-c / (points.row(1).array() + eps)) * c / (points.row(1).array() + eps).square(),
 
-            Eigen::VectorXd::Zero(points.cols())
-      };
+                Eigen::VectorXd::Zero(points.cols())};
     }
 };
 // ***************************************************************************
-
 
 } // namespace test
 } // namespace Elliptic_PCC_2D

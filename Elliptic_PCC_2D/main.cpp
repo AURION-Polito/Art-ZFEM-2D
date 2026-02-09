@@ -231,20 +231,20 @@ int main(int argc, char **argv)
     const unsigned int Method_ID = static_cast<unsigned int>(config.MethodType());
     const unsigned int TEST_ID = static_cast<unsigned int>(config.TestType());
 
+    Gedim::Output::PrintGenericMessage("ComputeErrors...", true);
+    Gedim::Profiler::StartTime("ComputeErrors");
+
+    const auto post_process_data =
+        assembler.PostProcessSolution(config, mesh, meshGeometricData, dofs_data, reference_element_data, assembler_data, *test);
+
     std::string s;
     std::ostringstream str(s);
     str.precision(6);
-    str << std::scientific << config.MeshMaxArea();
+    str << std::scientific << post_process_data.mesh_size;
 
     assembler_data.globalMatrixA.ToBinaryFile(exportSolutionFolder + "/Matrix_" + std::to_string(TEST_ID) + "_" +
                                               std::to_string(Method_ID) + "_" + std::to_string(config.MethodOrder()) +
                                               "_" + str.str() + ".txt");
-
-    Gedim::Output::PrintGenericMessage("ComputeErrors...", true);
-    Gedim::Profiler::StartTime("ComputeErrors");
-
-    auto post_process_data =
-        assembler.PostProcessSolution(config, mesh, meshGeometricData, dofs_data, reference_element_data, assembler_data, *test);
 
     Gedim::Profiler::StopTime("ComputeErrors");
     Gedim::Output::PrintStatusProgram("ComputeErrors");
