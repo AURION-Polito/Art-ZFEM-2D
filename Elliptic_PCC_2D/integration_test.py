@@ -125,7 +125,7 @@ def test_errors(errors,
         return slope_L2, slope_H1
 
 
-def plot_errors(list_errors, list_errors_fem, list_errors_fem_2, method_order, method_types, plot_err, plot_time, plot_conditioning):
+def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_err, plot_time, plot_conditioning):
     if plot_err:
         fig, ax = plt.subplots(figsize=(12, 12))
 
@@ -285,7 +285,7 @@ if __name__ == "__main__":
                                           num_ref,
                                           sub_triangulate=False,
                                           compute_conditioning=True,
-                                          num_code_executions=1,
+                                          num_code_executions=5,
                                           mesh_max_area=mesh_max_area,
                                           mesh_import_path="./", )
                 num_ref += 1
@@ -319,7 +319,7 @@ if __name__ == "__main__":
                                           num_ref,
                                           sub_triangulate=True,
                                           compute_conditioning=True,
-                                          num_code_executions=1,
+                                          num_code_executions=5,
                                           mesh_max_area=mesh_max_area,
                                           mesh_import_path="./", )
                 num_ref += 1
@@ -356,7 +356,7 @@ if __name__ == "__main__":
                                               num_ref,
                                               sub_triangulate=False,
                                               compute_conditioning=True,
-                                              num_code_executions=1,
+                                              num_code_executions=5,
                                               mesh_max_area=mesh_max_area,
                                               mesh_import_path="./")
                     num_ref += 1
@@ -376,7 +376,7 @@ if __name__ == "__main__":
                 if remove_folder:
                     os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-            plot_errors(list_errors, list_errors_fem, list_errors_fem_2, method_order, method_types, plot_err, plot_time,
+            plot_errors(list_errors, list_errors_fem_2, method_order, method_types, plot_err, plot_time,
                         plot_conditioning)
 
         with np.printoptions(precision=2):
@@ -402,7 +402,7 @@ if __name__ == "__main__":
                                           num_ref,
                                           sub_triangulate=True,
                                           compute_conditioning=True,
-                                          num_code_executions=1,
+                                          num_code_executions=5,
                                           mesh_max_area=mesh_max_area,
                                           mesh_import_path="./", )
                 num_ref += 1
@@ -460,7 +460,7 @@ if __name__ == "__main__":
                 if remove_folder:
                     os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-            plot_errors(list_errors, list_errors_fem, list_errors_fem_3, method_order, method_types, plot_err, plot_time,
+            plot_errors(list_errors, list_errors_fem_3, method_order, method_types, plot_err, plot_time,
                         plot_conditioning)
 
         with np.printoptions(precision=2):
@@ -490,7 +490,7 @@ if __name__ == "__main__":
                                           num_ref,
                                           sub_triangulate=True,
                                           compute_conditioning=True,
-                                          num_code_executions=1,
+                                          num_code_executions=5,
                                           mesh_max_area=0.0,
                                           mesh_import_path=mesh_max_area, )
                 num_ref += 1
@@ -531,7 +531,7 @@ if __name__ == "__main__":
                                               num_ref,
                                               sub_triangulate=False,
                                               compute_conditioning=True,
-                                              num_code_executions=1,
+                                              num_code_executions=5,
                                               mesh_max_area=0.0,
                                               mesh_import_path=mesh_max_area)
                     num_ref += 1
@@ -549,7 +549,7 @@ if __name__ == "__main__":
                 if remove_folder:
                     os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-            plot_errors(list_errors, list_errors_fem, list_errors_fem_4, method_order, method_types, plot_err, plot_time,
+            plot_errors(list_errors, list_errors_fem_4, method_order, method_types, plot_err, plot_time,
                         plot_conditioning)
 
         with np.printoptions(precision=2):
@@ -578,7 +578,7 @@ if __name__ == "__main__":
                                               num_ref,
                                               sub_triangulate=False,
                                               compute_conditioning=True,
-                                              num_code_executions=1,
+                                              num_code_executions=5,
                                               mesh_max_area=mesh_max_area,
                                               mesh_import_path="./")
                     num_ref += 1
