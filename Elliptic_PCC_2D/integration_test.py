@@ -125,7 +125,7 @@ def test_errors(errors,
         return slope_L2, slope_H1
 
 
-def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_err, plot_time, plot_conditioning):
+def plot_errors(list_errors, list_errors_fem, list_errors_fem_2, method_order, method_types, plot_err, plot_time, plot_conditioning):
     if plot_err:
         fig, ax = plt.subplots(figsize=(12, 12))
 
@@ -186,7 +186,7 @@ def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_e
     if plot_conditioning:
         fig, ax = plt.subplots(figsize=(12, 12))
 
-        errors = list_errors_fem[method_order - 1]
+        errors = list_errors_fem_2[method_order - 1]
         ax.plot(errors[:, 0], errors[:, 9], '-k^', linewidth=2, markersize=14,
                 label="FEM")
 
@@ -355,7 +355,7 @@ if __name__ == "__main__":
                                               mesh_generator,
                                               num_ref,
                                               sub_triangulate=False,
-                                              compute_conditioning=False,
+                                              compute_conditioning=True,
                                               num_code_executions=1,
                                               mesh_max_area=mesh_max_area,
                                               mesh_import_path="./")
@@ -376,7 +376,7 @@ if __name__ == "__main__":
                 if remove_folder:
                     os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-            plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_err, plot_time,
+            plot_errors(list_errors, list_errors_fem, list_errors_fem_2, method_order, method_types, plot_err, plot_time,
                         plot_conditioning)
 
         with np.printoptions(precision=2):
@@ -460,11 +460,49 @@ if __name__ == "__main__":
                 if remove_folder:
                     os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-            plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_err, plot_time,
+            plot_errors(list_errors, list_errors_fem, list_errors_fem_3, method_order, method_types, plot_err, plot_time,
                         plot_conditioning)
 
         with np.printoptions(precision=2):
             print(table_order)
+
+        test_type = 3
+        mesh_generator = 4
+        method_type = 0
+        mesh_max_areas = [program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_3x3",
+                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_6x6",
+                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_9x9",
+                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_12x12",
+                          program_folder + "/../../PolyDiM/Mesh/2D/StructuredConcave/StructuredConcave_15x15"]
+        method_orders = [1, 2, 3, 4, 5, 6]
+        list_errors_fem_4 = []
+        vv = 0
+        for method_order in method_orders:
+            num_ref = 0
+            for mesh_max_area in mesh_max_areas:
+                export_path = run_program(program_folder,
+                                          program_path,
+                                          "Run_MG{0}".format(mesh_generator),
+                                          method_type,
+                                          method_order,
+                                          test_type,
+                                          mesh_generator,
+                                          num_ref,
+                                          sub_triangulate=True,
+                                          compute_conditioning=True,
+                                          num_code_executions=1,
+                                          mesh_max_area=0.0,
+                                          mesh_import_path=mesh_max_area, )
+                num_ref += 1
+
+            errors = import_errors(export_path, method_type, method_order, test_type)
+            test_errors(errors,
+                        method_order,
+                        tol)
+            list_errors_fem_4.append(np.array(errors[1:]))
+
+            if remove_folder:
+                os.system("rm -rf " + os.path.join(program_folder, export_path))
 
         test_type = 3
         mesh_generator = 4
@@ -511,7 +549,7 @@ if __name__ == "__main__":
                 if remove_folder:
                     os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-            plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_err, plot_time,
+            plot_errors(list_errors, list_errors_fem, list_errors_fem_4, method_order, method_types, plot_err, plot_time,
                         plot_conditioning)
 
         with np.printoptions(precision=2):
