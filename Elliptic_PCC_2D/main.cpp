@@ -260,17 +260,27 @@ int main(int argc, char **argv)
     const auto post_process_data =
         assembler.PostProcessSolution(config, mesh, meshGeometricData, dofs_data, reference_element_data, assembler_data, *test);
 
-    std::string s;
-    std::ostringstream str(s);
-    str.precision(6);
-    str << std::scientific << post_process_data.mesh_size;
-
-    assembler_data.globalMatrixA.ToBinaryFile(exportSolutionFolder + "/Matrix_" + std::to_string(TEST_ID) + "_" +
-                                              std::to_string(Method_ID) + "_" + std::to_string(config.MethodOrder()) +
-                                              "_" + str.str() + ".txt");
-
     Gedim::Profiler::StopTime("ComputeErrors");
     Gedim::Output::PrintStatusProgram("ComputeErrors");
+
+
+    if (config.ExportMatrix())
+    {
+      Gedim::Output::PrintGenericMessage("ExportMatrix...", true);
+      Gedim::Profiler::StartTime("ExportMatrix");
+
+      std::string s;
+      std::ostringstream str(s);
+      str.precision(6);
+      str << std::scientific << post_process_data.mesh_size;
+
+      assembler_data.globalMatrixA.ToBinaryFile(exportSolutionFolder + "/Matrix_" + std::to_string(TEST_ID) + "_" +
+                                                std::to_string(Method_ID) + "_" + std::to_string(config.MethodOrder()) +
+                                                "_" + str.str() + ".txt");
+
+      Gedim::Profiler::StopTime("ExportMatrix");
+      Gedim::Output::PrintStatusProgram("ExportMatrix");
+    }
 
     Gedim::Output::PrintGenericMessage("ExportSolution...", true);
     Gedim::Profiler::StartTime("ExportSolution");
