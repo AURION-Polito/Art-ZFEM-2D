@@ -201,6 +201,7 @@ int main(int argc, char **argv)
     Polydim::examples::Elliptic_PCC_2D::Assembler assembler;
     Polydim::examples::Elliptic_PCC_2D::Assembler::Elliptic_PCC_2D_Problem_Data assembler_data;
 
+    Gedim::ILinearSolver::SolutionInfo solver_data;
     double time_assembler = 0.0;
     double time_solver = 0.0;
     for (unsigned int i = 0; i < config.ComputationalTime(); i++)
@@ -223,7 +224,7 @@ int main(int argc, char **argv)
             {
                  Gedim::Eigen_PCGSolver<> solver;
                  solver.Initialize(assembler_data.globalMatrixA, { dofs_data.NumberDOFs, 1.0e-15 });
-                 solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
+                 solver_data = solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
             }
             const auto end_time_solver = Gedim::Profiler::GetTime();
             time_solver += Gedim::Profiler::ComputeTime(start_time_solver, end_time_solver);
@@ -236,7 +237,7 @@ int main(int argc, char **argv)
             {
                 Gedim::Eigen_CholeskySolver solver;
                 solver.Initialize(assembler_data.globalMatrixA);
-                solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
+                solver_data = solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
             }
             const auto end_time_solver = Gedim::Profiler::GetTime();
             time_solver += Gedim::Profiler::ComputeTime(start_time_solver, end_time_solver);
@@ -281,6 +282,7 @@ int main(int argc, char **argv)
                                                                            post_process_data,
                                                                            time_assembler,
                                                                            time_solver,
+                                                                           solver_data,
                                                                            exportSolutionFolder,
                                                                            exportVtuFolder);
     if (config.PostProcess())

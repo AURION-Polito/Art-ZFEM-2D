@@ -158,6 +158,7 @@ void export_solution(const Polydim::examples::Elliptic_PCC_2D::Program_Configura
                      const Polydim::examples::Elliptic_PCC_2D::Assembler::PostProcess_Data &post_process_data,
                      const double &time_assembler,
                      const double &time_solver,
+                     const Gedim::ILinearSolver::SolutionInfo& solver_info,
                      const std::string &exportSolutionFolder,
                      const std::string &exportVtuFolder)
 {
@@ -182,7 +183,9 @@ void export_solution(const Polydim::examples::Elliptic_PCC_2D::Program_Configura
         std::cout << "residual" << separator;
         std::cout << "cond" << separator;
         std::cout << "TimeA" << separator;
-        std::cout << "TimeS" << std::endl;
+        std::cout << "TimeS" << separator;
+        std::cout << "solver_iterations" << separator;
+        std::cout << "solver_residual" << std::endl;
 
         std::cout.precision(2);
         std::cout << std::scientific << TEST_ID << separator;
@@ -200,7 +203,9 @@ void export_solution(const Polydim::examples::Elliptic_PCC_2D::Program_Configura
         std::cout << std::scientific << post_process_data.residual_norm << separator;
         std::cout << std::scientific << post_process_data.conditioning << separator;
         std::cout << std::scientific << time_assembler << separator;
-        std::cout << std::scientific << time_solver << std::endl;
+        std::cout << std::scientific << time_solver << separator;
+        std::cout << std::scientific << solver_info.Iterations << separator;
+        std::cout << std::scientific << solver_info.Residual << std::endl;
     }
 
     {
@@ -227,7 +232,9 @@ void export_solution(const Polydim::examples::Elliptic_PCC_2D::Program_Configura
             errorFile << "residual" << separator;
             errorFile << "cond" << separator;
             errorFile << "TimeA" << separator;
-            errorFile << "TimeS" << std::endl;
+            errorFile << "TimeS" << separator;
+            errorFile << "solver_iterations" << separator;
+            errorFile << "solver_residual" << std::endl;
         }
 
         errorFile.precision(16);
@@ -246,7 +253,9 @@ void export_solution(const Polydim::examples::Elliptic_PCC_2D::Program_Configura
         errorFile << std::scientific << post_process_data.residual_norm << separator;
         errorFile << std::scientific << post_process_data.conditioning << separator;
         errorFile << std::scientific << time_assembler << separator;
-        errorFile << std::scientific << time_solver << std::endl;
+        errorFile << std::scientific << time_solver << separator;
+        errorFile << std::scientific << solver_info.Iterations << separator;
+        errorFile << std::scientific << solver_info.Residual << std::endl;
 
         errorFile.close();
     }
