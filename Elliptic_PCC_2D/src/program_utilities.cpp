@@ -74,9 +74,13 @@ void create_domain_mesh(const Polydim::examples::Elliptic_PCC_2D::Program_Config
         throw std::runtime_error("MeshGenerator " + std::to_string((unsigned int)config.MeshGenerator()) + " not supported");
     }
     meshUtilities.ComputeCell1DCell2DNeighbours(mesh);
+
+    if (config.CheckMesh())
+    {
     Gedim::MeshUtilities::CheckMesh2DConfiguration configuration;
     configuration.Cell2D_CheckConvexity = false;
     meshUtilities.CheckMesh2D(configuration, geometryUtilities, mesh);
+    }
 }
 // ***************************************************************************
 void make_mesh_triangular_by_internal_point(const std::vector<Eigen::Vector3d> &internal_points, Gedim::IMeshDAO &mesh)

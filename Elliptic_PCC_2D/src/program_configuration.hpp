@@ -53,6 +53,7 @@ struct Program_Configuration final
         Gedim::Configurations::AddProperty("GeometricTolerance2D", 1.0e-14, "Geometric Tolerance 2D (Default: 1.0e-14)");
 
         Gedim::Configurations::AddProperty("SubTriangulate", false, "SubTraingulate Mesh (Default: false)");
+        Gedim::Configurations::AddProperty("CheckMesh", false, "Check mesh (Default: false)");
 
         // Method parameters
         Gedim::Configurations::AddProperty("MethodType",
@@ -110,6 +111,10 @@ struct Program_Configuration final
     inline PDETools::LocalSpace_PCC_2D::MethodTypes MethodType() const
     {
         return static_cast<PDETools::LocalSpace_PCC_2D::MethodTypes>(Gedim::Configurations::GetPropertyValue<unsigned int>("MethodType"));
+    }
+    inline bool CheckMesh() const
+    {
+        return Gedim::Configurations::GetPropertyValue<bool>("CheckMesh");
     }
 
     inline bool ComputeMethodPerformance() const
