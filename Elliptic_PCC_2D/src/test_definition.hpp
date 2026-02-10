@@ -366,7 +366,7 @@ struct Computational_Comparison final : public I_Test
     Computational_Comparison()
     {
         eps = 1.0e-13;
-        c = 2;
+        c = 2.0;
         s = (0.5 * M_PI) * exp(c);
         power = 20.0;
     }
