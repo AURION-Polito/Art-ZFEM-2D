@@ -11,6 +11,7 @@
 
 #include "Eigen_CholeskySolver.hpp"
 #include "Eigen_LUSolver.hpp"
+#include "Eigen_PCGSolver.hpp"
 #include "MeshMatricesDAO_mesh_connectivity_data.hpp"
 #include "VTKUtilities.hpp"
 #include "program_utilities.hpp"
@@ -213,16 +214,37 @@ int main(int argc, char **argv)
 
         time_assembler += Gedim::Profiler::ComputeTime(start_time_assembler, end_time_assembler);
 
-        const auto start_time_solver = Gedim::Profiler::GetTime();
-        if (dofs_data.NumberDOFs > 0)
+        switch (config.SolverType())
         {
-            Gedim::Eigen_CholeskySolver solver;
-            solver.Initialize(assembler_data.globalMatrixA);
-            solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
+          case Polydim::examples::Elliptic_PCC_2D::Program_Configuration::Solver_Types::PCG:
+          {
+            const auto start_time_solver = Gedim::Profiler::GetTime();
+            if (dofs_data.NumberDOFs > 0)
+            {
+                 Gedim::Eigen_PCGSolver<> solver;
+                 solver.Initialize(assembler_data.globalMatrixA, { dofs_data.NumberDOFs, 1.0e-15 });
+                 solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
+            }
+            const auto end_time_solver = Gedim::Profiler::GetTime();
+            time_solver += Gedim::Profiler::ComputeTime(start_time_solver, end_time_solver);
+          }
+            break;
+          case Polydim::examples::Elliptic_PCC_2D::Program_Configuration::Solver_Types::Cholesky:
+          {
+            const auto start_time_solver = Gedim::Profiler::GetTime();
+            if (dofs_data.NumberDOFs > 0)
+            {
+                Gedim::Eigen_CholeskySolver solver;
+                solver.Initialize(assembler_data.globalMatrixA);
+                solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
+            }
+            const auto end_time_solver = Gedim::Profiler::GetTime();
+            time_solver += Gedim::Profiler::ComputeTime(start_time_solver, end_time_solver);
+          }
+            break;
+          default:
+            throw std::runtime_error("Unknown solver type");
         }
-        const auto end_time_solver = Gedim::Profiler::GetTime();
-
-        time_solver += Gedim::Profiler::ComputeTime(start_time_solver, end_time_solver);
     }
 
     time_assembler /= config.ComputationalTime();
