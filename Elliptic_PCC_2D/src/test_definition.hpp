@@ -17,53 +17,53 @@
 
 namespace Polydim
 {
-namespace examples
-{
-namespace Elliptic_PCC_2D
-{
-namespace test
-{
-enum struct Test_Types
-{
-    Patch_Test = 1,
-    Elliptic_Polynomial_Problem = 2,
-    Elliptic_Problem = 3,
-    Computational_Comparison = 4
-};
-
-struct I_Test
-{
-    virtual Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const = 0;
-    virtual std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const = 0;
-    virtual std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const = 0;
-    virtual Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const = 0;
-    virtual Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const = 0;
-    virtual Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const = 0;
-    virtual Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const = 0;
-    virtual Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const = 0;
-    virtual std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const = 0;
-};
-// ***************************************************************************
-struct Elliptic_Problem final : public I_Test
-{
-    Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
+  namespace examples
+  {
+    namespace Elliptic_PCC_2D
     {
-        Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
+      namespace test
+      {
+        enum struct Test_Types
+        {
+          Patch_Test = 1,
+          Elliptic_Polynomial_Problem = 2,
+          Elliptic_Problem = 3,
+          Computational_Comparison = 4
+        };
 
-        domain.area = 1.0;
+        struct I_Test
+        {
+            virtual Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const = 0;
+            virtual std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const = 0;
+            virtual std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const = 0;
+            virtual Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const = 0;
+            virtual Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const = 0;
+            virtual Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const = 0;
+            virtual Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const = 0;
+            virtual Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const = 0;
+            virtual std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const = 0;
+        };
+        // ***************************************************************************
+        struct Elliptic_Problem final : public I_Test
+        {
+            Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
+            {
+              Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
 
-        domain.vertices = Eigen::MatrixXd::Zero(3, 4);
-        domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
-        domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
+              domain.area = 1.0;
 
-        domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
+              domain.vertices = Eigen::MatrixXd::Zero(3, 4);
+              domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
+              domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
 
-        return domain;
-    }
+              domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
 
-    std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
-    {
-        return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
+              return domain;
+            }
+
+            std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
+            {
+              return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
                 {1, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {2, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {3, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
@@ -72,92 +72,92 @@ struct Elliptic_Problem final : public I_Test
                 {6, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {7, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {8, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}}};
-    }
+            }
 
-    std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
-    {
-        return {1.0 + points.row(1).array() * points.row(1).array(),
-                -points.row(0).array() * points.row(1).array(),
-                Eigen::VectorXd::Zero(points.cols()),
-                -points.row(0).array() * points.row(1).array(),
-                1.0 + points.row(0).array() * points.row(0).array(),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Constant(points.cols(), 0.0)};
-    };
+            std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
+            {
+              return {1.0 + points.row(1).array() * points.row(1).array(),
+                    -points.row(0).array() * points.row(1).array(),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    -points.row(0).array() * points.row(1).array(),
+                    1.0 + points.row(0).array() * points.row(0).array(),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Constant(points.cols(), 0.0)};
+            };
 
-    Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
-    {
-        return points.row(0).array() * points.row(1).array();
-    };
+            Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
+            {
+              return points.row(0).array() * points.row(1).array();
+            };
 
-    Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
-    {
-        Eigen::ArrayXd x = points.row(0);
-        Eigen::ArrayXd y = points.row(1);
-        return 4.0 * std::numbers::pi * std::numbers::pi *
-                   ((2.0 + x * x + y * y) * sin(2.0 * std::numbers::pi * x) * sin(2.0 * std::numbers::pi * y) +
-                    2.0 * x * y * cos(2.0 * std::numbers::pi * x) * cos(2.0 * std::numbers::pi * y)) +
-               2.0 * y * std::numbers::pi * sin(2.0 * std::numbers::pi * x) * cos(2.0 * std::numbers::pi * y) +
-               2.0 * x * std::numbers::pi * cos(2.0 * std::numbers::pi * x) * sin(2.0 * std::numbers::pi * y) +
-               reaction_term(points).array() * exact_solution(points).array();
-    };
+            Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
+            {
+              Eigen::ArrayXd x = points.row(0);
+              Eigen::ArrayXd y = points.row(1);
+              return 4.0 * std::numbers::pi * std::numbers::pi *
+                  ((2.0 + x * x + y * y) * sin(2.0 * std::numbers::pi * x) * sin(2.0 * std::numbers::pi * y) +
+                   2.0 * x * y * cos(2.0 * std::numbers::pi * x) * cos(2.0 * std::numbers::pi * y)) +
+                  2.0 * y * std::numbers::pi * sin(2.0 * std::numbers::pi * x) * cos(2.0 * std::numbers::pi * y) +
+                  2.0 * x * std::numbers::pi * cos(2.0 * std::numbers::pi * x) * sin(2.0 * std::numbers::pi * y) +
+                  reaction_term(points).array() * exact_solution(points).array();
+            };
 
-    Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
-    {
-        if (marker != 1)
-            throw std::runtime_error("Unknown marker");
+            Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
+            {
+              if (marker != 1)
+                throw std::runtime_error("Unknown marker");
 
-        return exact_solution(points);
-    };
+              return exact_solution(points);
+            };
 
-    Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
-    {
-        switch (marker)
-        {
-        default:
-            throw std::runtime_error("Unknown marker");
-        }
-    }
+            Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
+            {
+              switch (marker)
+              {
+                default:
+                  throw std::runtime_error("Unknown marker");
+              }
+            }
 
-    Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
-    {
-        return sin(2.0 * std::numbers::pi * points.row(0).array()) * sin(2.0 * std::numbers::pi * points.row(1).array());
-    };
+            Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
+            {
+              return sin(2.0 * std::numbers::pi * points.row(0).array()) * sin(2.0 * std::numbers::pi * points.row(1).array());
+            };
 
-    std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
-    {
-        return {2.0 * std::numbers::pi * cos(2.0 * std::numbers::pi * points.row(0).array()) *
+            std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
+            {
+              return {2.0 * std::numbers::pi * cos(2.0 * std::numbers::pi * points.row(0).array()) *
                     sin(2.0 * std::numbers::pi * points.row(1).array()),
-                2.0 * std::numbers::pi * sin(2.0 * std::numbers::pi * points.row(0).array()) *
+                    2.0 * std::numbers::pi * sin(2.0 * std::numbers::pi * points.row(0).array()) *
                     cos(2.0 * std::numbers::pi * points.row(1).array()),
-                Eigen::VectorXd::Zero(points.cols())};
-    }
-};
-// ***************************************************************************
-struct Patch_Test final : public I_Test
-{
-    static unsigned int order;
+                    Eigen::VectorXd::Zero(points.cols())};
+            }
+        };
+        // ***************************************************************************
+        struct Patch_Test final : public I_Test
+        {
+            static unsigned int order;
 
-    Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
-    {
-        Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
+            Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
+            {
+              Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
 
-        domain.area = 1.0;
+              domain.area = 1.0;
 
-        domain.vertices = Eigen::MatrixXd::Zero(3, 4);
-        domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
-        domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
+              domain.vertices = Eigen::MatrixXd::Zero(3, 4);
+              domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
+              domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
 
-        domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
+              domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
 
-        return domain;
-    }
+              return domain;
+            }
 
-    std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
-    {
-        return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
+            std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
+            {
+              return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
                 {1, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {2, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {3, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
@@ -166,122 +166,122 @@ struct Patch_Test final : public I_Test
                 {6, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {7, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {8, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}}};
-    }
+            }
 
-    std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
-    {
-        return {Eigen::VectorXd::Constant(points.cols(), 1.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Constant(points.cols(), 1.0),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Constant(points.cols(), 0.0)};
-    };
+            std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
+            {
+              return {Eigen::VectorXd::Constant(points.cols(), 1.0),
+                    Eigen::VectorXd::Constant(points.cols(), 0.0),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Constant(points.cols(), 0.0),
+                    Eigen::VectorXd::Constant(points.cols(), 1.0),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Constant(points.cols(), 0.0)};
+            };
 
-    Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
-    {
-        const double k = 0.0;
-        return Eigen::VectorXd::Constant(points.cols(), k);
-    };
+            Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
+            {
+              const double k = 0.0;
+              return Eigen::VectorXd::Constant(points.cols(), k);
+            };
 
-    Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
-    {
-        Eigen::VectorXd source_term = Eigen::VectorXd::Constant(points.cols(), 2.0 * order * (order - 1));
-        const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
+            Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
+            {
+              Eigen::VectorXd source_term = Eigen::VectorXd::Constant(points.cols(), 2.0 * order * (order - 1));
+              const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
 
-        const int max_order = order - 2;
-        for (int i = 0; i < max_order; ++i)
-            source_term.array() *= polynomial;
+              const int max_order = order - 2;
+              for (int i = 0; i < max_order; ++i)
+                source_term.array() *= polynomial;
 
-        return -source_term;
-    };
+              return -source_term;
+            };
 
-    Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
-    {
-        if (marker != 1)
-            throw std::runtime_error("Unknown marker");
+            Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
+            {
+              if (marker != 1)
+                throw std::runtime_error("Unknown marker");
 
-        const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
+              const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
 
-        Eigen::VectorXd result = Eigen::VectorXd::Constant(points.cols(), 1.0);
-        for (int i = 0; i < order; ++i)
-            result.array() *= polynomial;
+              Eigen::VectorXd result = Eigen::VectorXd::Constant(points.cols(), 1.0);
+              for (int i = 0; i < order; ++i)
+                result.array() *= polynomial;
 
-        return result;
-    };
+              return result;
+            };
 
-    Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
-    {
+            Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
+            {
 
-        Eigen::VectorXd derivatives = Eigen::VectorXd::Constant(points.cols(), 1.0);
-        const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
+              Eigen::VectorXd derivatives = Eigen::VectorXd::Constant(points.cols(), 1.0);
+              const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
 
-        const int max_order = order - 1;
-        for (int i = 0; i < max_order; ++i)
-            derivatives.array() *= polynomial;
+              const int max_order = order - 1;
+              for (int i = 0; i < max_order; ++i)
+                derivatives.array() *= polynomial;
 
-        std::array<Eigen::VectorXd, 3> der = {derivatives, derivatives, Eigen::VectorXd::Zero(points.cols())};
+              std::array<Eigen::VectorXd, 3> der = {derivatives, derivatives, Eigen::VectorXd::Zero(points.cols())};
 
-        switch (marker)
+              switch (marker)
+              {
+                case 2:
+                  return order * derivatives.array();
+                case 4:
+                  return order * derivatives.array();
+                default:
+                  throw std::runtime_error("not valid marker");
+              }
+
+              throw std::runtime_error("Not supported");
+            }
+
+            Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
+            {
+              const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
+
+              Eigen::VectorXd result = Eigen::VectorXd::Constant(points.cols(), 1.0);
+              for (int i = 0; i < order; ++i)
+                result.array() *= polynomial;
+
+              return result;
+            };
+
+            std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
+            {
+              Eigen::VectorXd derivatives = Eigen::VectorXd::Constant(points.cols(), order);
+              const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
+
+              const int max_order = order - 1;
+              for (int i = 0; i < max_order; ++i)
+                derivatives.array() *= polynomial;
+
+              return {derivatives, derivatives, Eigen::VectorXd::Zero(points.cols())};
+            }
+        };
+        // ***************************************************************************
+        struct Elliptic_Polynomial_Problem final : public I_Test
         {
-        case 2:
-            return order * derivatives.array();
-        case 4:
-            return order * derivatives.array();
-        default:
-            throw std::runtime_error("not valid marker");
-        }
+            Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
+            {
+              Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
 
-        throw std::runtime_error("Not supported");
-    }
+              domain.area = 1.0;
 
-    Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
-    {
-        const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
+              domain.vertices = Eigen::MatrixXd::Zero(3, 4);
+              domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
+              domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
 
-        Eigen::VectorXd result = Eigen::VectorXd::Constant(points.cols(), 1.0);
-        for (int i = 0; i < order; ++i)
-            result.array() *= polynomial;
+              domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
 
-        return result;
-    };
+              return domain;
+            }
 
-    std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
-    {
-        Eigen::VectorXd derivatives = Eigen::VectorXd::Constant(points.cols(), order);
-        const Eigen::ArrayXd polynomial = points.row(0).array() + points.row(1).array() + 0.5;
-
-        const int max_order = order - 1;
-        for (int i = 0; i < max_order; ++i)
-            derivatives.array() *= polynomial;
-
-        return {derivatives, derivatives, Eigen::VectorXd::Zero(points.cols())};
-    }
-};
-// ***************************************************************************
-struct Elliptic_Polynomial_Problem final : public I_Test
-{
-    Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
-    {
-        Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
-
-        domain.area = 1.0;
-
-        domain.vertices = Eigen::MatrixXd::Zero(3, 4);
-        domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
-        domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
-
-        domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
-
-        return domain;
-    }
-
-    std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
-    {
-        return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
+            std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
+            {
+              return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
                 {1, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {2, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {3, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
@@ -290,105 +290,101 @@ struct Elliptic_Polynomial_Problem final : public I_Test
                 {6, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {7, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {8, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}}};
-    }
-    std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
-    {
-        return {Eigen::VectorXd::Constant(points.cols(), 1.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
-                Eigen::VectorXd::Constant(points.cols(), 1.0),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Constant(points.cols(), 0.0)};
-    };
+            }
+            std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
+            {
+              return {Eigen::VectorXd::Constant(points.cols(), 1.0),
+                    Eigen::VectorXd::Constant(points.cols(), 0.0),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Constant(points.cols(), 0.0),
+                    Eigen::VectorXd::Constant(points.cols(), 1.0),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Constant(points.cols(), 0.0)};
+            };
 
-    Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
-    {
-        const double k = 0.0;
-        return Eigen::VectorXd::Constant(points.cols(), k);
-    };
+            Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
+            {
+              const double k = 0.0;
+              return Eigen::VectorXd::Constant(points.cols(), k);
+            };
 
-    Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
-    {
-        return 32.0 * (points.row(1).array() * (1.0 - points.row(1).array()) +
-                       points.row(0).array() * (1.0 - points.row(0).array()));
-    };
+            Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
+            {
+              return 32.0 * (points.row(1).array() * (1.0 - points.row(1).array()) +
+                             points.row(0).array() * (1.0 - points.row(0).array()));
+            };
 
-    Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
-    {
-        if (marker != 1)
-            throw std::runtime_error("Unknown marker");
+            Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
+            {
+              if (marker != 1)
+                throw std::runtime_error("Unknown marker");
 
-        return 16.0 * (points.row(1).array() * (1.0 - points.row(1).array()) * points.row(0).array() *
-                       (1.0 - points.row(0).array())) +
-               1.1;
-    };
+              return 16.0 * (points.row(1).array() * (1.0 - points.row(1).array()) * points.row(0).array() *
+                             (1.0 - points.row(0).array())) +
+                  1.1;
+            };
 
-    Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
-    {
-        switch (marker)
+            Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
+            {
+              switch (marker)
+              {
+                case 2: // co-normal derivatives on the right
+                  return 16.0 * (1.0 - 2.0 * points.row(0).array()) * points.row(1).array() * (1.0 - points.row(1).array());
+                case 4: // co-normal derivatives on the left
+                  return -16.0 * (1.0 - 2.0 * points.row(0).array()) * points.row(1).array() * (1.0 - points.row(1).array());
+                default:
+                  throw std::runtime_error("Unknown marker");
+              }
+            }
+
+            Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
+            {
+              return 16.0 * (points.row(1).array() * (1.0 - points.row(1).array()) * points.row(0).array() *
+                             (1.0 - points.row(0).array())) +
+                  1.1;
+            };
+
+            std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
+            {
+              return {16.0 * (1.0 - 2.0 * points.row(0).array()) * points.row(1).array() * (1.0 - points.row(1).array()),
+                    16.0 * (1.0 - 2.0 * points.row(1).array()) * points.row(0).array() * (1.0 - points.row(0).array()),
+                    Eigen::VectorXd::Zero(points.cols())};
+            }
+        };
+        // ***************************************************************************
+        struct Computational_Comparison final : public I_Test
         {
-        case 2: // co-normal derivatives on the right
-            return 16.0 * (1.0 - 2.0 * points.row(0).array()) * points.row(1).array() * (1.0 - points.row(1).array());
-        case 4: // co-normal derivatives on the left
-            return -16.0 * (1.0 - 2.0 * points.row(0).array()) * points.row(1).array() * (1.0 - points.row(1).array());
-        default:
-            throw std::runtime_error("Unknown marker");
-        }
-    }
+          private:
+            double mu;
+            double sigma;
 
-    Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
-    {
-        return 16.0 * (points.row(1).array() * (1.0 - points.row(1).array()) * points.row(0).array() *
-                       (1.0 - points.row(0).array())) +
-               1.1;
-    };
+          public:
+            Computational_Comparison()
+            {
+              mu = 1.0;
+              sigma = 0.1;
+            }
 
-    std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
-    {
-        return {16.0 * (1.0 - 2.0 * points.row(0).array()) * points.row(1).array() * (1.0 - points.row(1).array()),
-                16.0 * (1.0 - 2.0 * points.row(1).array()) * points.row(0).array() * (1.0 - points.row(0).array()),
-                Eigen::VectorXd::Zero(points.cols())};
-    }
-};
-// ***************************************************************************
-struct Computational_Comparison final : public I_Test
-{
-  private:
-    double eps;
-    double c;
-    double s;
-    double power;
+            Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
+            {
+              Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
 
-  public:
-    Computational_Comparison()
-    {
-        eps = 1.0e-13;
-        c = 2.0;
-        s = (0.5 * M_PI) / exp(-c);
-        power = 20.0;
-    }
+              domain.area = 1.0;
 
-    Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain() const
-    {
-        Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D domain;
+              domain.vertices = Eigen::MatrixXd::Zero(3, 4);
+              domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
+              domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
 
-        domain.area = 1.0;
+              domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
 
-        domain.vertices = Eigen::MatrixXd::Zero(3, 4);
-        domain.vertices.row(0) << 0.0, 1.0, 1.0, 0.0;
-        domain.vertices.row(1) << 0.0, 0.0, 1.0, 1.0;
+              return domain;
+            }
 
-        domain.shape_type = Polydim::PDETools::Mesh::PDE_Mesh_Utilities::PDE_Domain_2D::Domain_Shape_Types::Parallelogram;
-
-        return domain;
-    }
-
-    std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
-    {
-        return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
+            std::map<unsigned int, Polydim::PDETools::DOFs::DOFsManager::MeshDOFsInfo::BoundaryInfo> boundary_info() const
+            {
+              return {{0, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::None, 0}},
                 {1, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {2, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {3, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
@@ -397,143 +393,95 @@ struct Computational_Comparison final : public I_Test
                 {6, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {7, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}},
                 {8, {Polydim::PDETools::DOFs::DOFsManager::BoundaryTypes::Strong, 1}}};
-    }
+            }
 
-    std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
-    {
-        return {Eigen::VectorXd::Constant(points.cols(), 1.0),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Constant(points.cols(), 1.0),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Zero(points.cols())};
-    };
+            std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
+            {
+              return {Eigen::VectorXd::Constant(points.cols(), 1.0),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Constant(points.cols(), 1.0),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols()),
+                    Eigen::VectorXd::Zero(points.cols())};
+            };
 
-    Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
-    {
-        return Eigen::VectorXd::Zero(points.cols());
-    };
+            Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
+            {
+              return Eigen::VectorXd::Zero(points.cols());
+            };
 
-    Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
-    {
-        const Eigen::Index n = points.cols();
-        Eigen::VectorXd lap(n);
-        lap.setZero();
+            Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
+            {
 
-        Eigen::VectorXd check_lap(n);
-        check_lap.setZero();
-
-        for (Eigen::Index i = 0; i < n; ++i)
-        {
-            const double x = points(0, i);
-            const double y = points(1, i);
-
-            const double xb = x + eps;
-            const double yb = y + eps;
-
-            if (std::abs(xb) < eps || std::abs(yb) < eps)
-                throw std::runtime_error("error on f evaluation, NaN");
-
-            // Helpers for x
-            const double Ex = std::exp(-c / xb);
-            const double Ax = s * Ex;
-            const double Fx = 1.0 - std::cos(Ax);
-
-            // F''(x)
-            const double xb2 = xb * xb;
-            const double xb4 = xb2 * xb2;
-            const double common_x = (c * s * Ex) / xb4; // (cs e^{-c/(x+b)})/(x+b)^4
-            const double Fxx = common_x * ((c * s * Ex) * std::cos(Ax) + (c - 2.0 * xb) * std::sin(Ax));
-
-            // Helpers for y
-            const double Ey = std::exp(-c / yb);
-            const double Ay = s * Ey;
-            const double Gy = 1.0 - std::cos(Ay);
-
-            // G''(y)
-            const double yb2 = yb * yb;
-            const double yb4 = yb2 * yb2;
-            const double common_y = (c * s * Ey) / yb4;
-            const double Gyy = common_y * ((c * s * Ey) * std::cos(Ay) + (c - 2.0 * yb) * std::sin(Ay));
-
-            // Laplacian: Δu = p [F''(x) G(y) + F(x) G''(y)]
-            lap(i) = power * (Fxx * Gy + Fx * Gyy);
+              const Eigen::Index n = points.cols();
+              Eigen::VectorXd check_lap(n);
+              check_lap.setZero();
 
 
+              const double sigma_2 = sigma * sigma;
+              const double sigma_4 = sigma_2 * sigma_2;
+              const double sigma_6 = sigma_4 * sigma_2;
+              for (Eigen::Index i = 0; i < n; ++i)
+              {
+                const double x = points(0, i);
+                const double y = points(1, i);
 
+                const double xmu2 = (mu - x) * (mu - x);
+                const double ymu2 = (mu - y) * (mu - y);
 
-            // Check
-            // c*p*s*(-(e + x)**4*(cos(s*exp(-c/(e + x))) - 1)*(c*s*cos(s*exp(-c/(e + y))) + c*exp(c/(e + y))*sin(s*exp(-c/(e + y))) - 2*(e + y)*exp(c/(e + y))*sin(s*exp(-c/(e + y))))*exp(2*c/(e + x)) - (e + y)**4*(cos(s*exp(-c/(e + y))) - 1)*(c*s*cos(s*exp(-c/(e + x))) + c*exp(c/(e + x))*sin(s*exp(-c/(e + x))) - 2*(e + x)*exp(c/(e + x))*sin(s*exp(-c/(e + x))))*exp(2*c/(e + y)))*exp(-2*c*(2*e + x + y)/((e + x)*(e + y)))/((e + x)**4*(e + y)**4)
-            check_lap(i) = c * power * s * (
-                             -xb4*(cos(s*exp(-c/(eps + x))) - 1) *
-                             (c*s*cos(s*exp(-c/(eps + y))) +
-                              c*exp(c/(eps + y))*sin(s*exp(-c/(eps + y))) -
-                              2.0*(eps + y)*exp(c/(eps + y))*sin(s*exp(-c/(eps + y)))) *
-                             exp(2.0*c/(eps + x)) - yb4*(cos(s*exp(-c/(eps + y))) - 1) *
-                             (c*s*cos(s*exp(-c/(eps + x))) + c*exp(c/(eps + x))*sin(s*exp(-c/(eps + x))) -
-                              2.0*(eps + x)*exp(c/(eps + x))*sin(s*exp(-c/(eps + x))))*exp(2*c/(eps + y))) *
-                           exp(-2.0*c*(2*eps + x + y)/((eps + x)*(eps + y)))/(xb4*yb4);
+                // (-2*sigma**2 + (mu - x)**2 + (mu - y)**2)*exp(-((mu - x)**2 + (mu - y)**2)/(2*sigma**2))/(2*pi*sigma**6)
+                check_lap(i) = (-2.0 * sigma_2 + xmu2 + ymu2) *
+                               exp(-(xmu2 + ymu2) / (2.0 * sigma_2)) / (2.0 * M_PI * sigma_6);
+              }
 
-            assert(!std::isnan(check_lap(i)));
+              //return -lap;
+              return -check_lap;
+            };
 
-            //double max_check = std::max(abs(lap(i)), abs(check_lap(i)));
-            //if (max_check == 0.0)
-            //  max_check = 1.0;
-            //assert(abs(check_lap(i) - lap(i)) < 1.0e-15 * max_check);
-        }
+            Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
+            {
+              if (marker != 1)
+                throw std::runtime_error("Unknown marker");
 
-        //return -lap;
-        return -check_lap;
-    };
+              return exact_solution(points);
+            };
 
-    Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
-    {
-        if (marker != 1)
-            throw std::runtime_error("Unknown marker");
+            Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
+            {
+              switch (marker)
+              {
+                default:
+                  throw std::runtime_error("Unknown marker");
+              }
+            }
 
-        return exact_solution(points);
-    };
+            Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
+            {
+              // 1/(2*pi*sigma**2)*sym.exp(-((x-mu)**2+(y-mu)**2)/(2*sigma**2))
+              const double sigma_2 = sigma * sigma;
+              return 1.0 / (2.0 * M_PI * sigma_2) * exp(-((points.row(0).array()-mu).square() + (points.row(1).array()-mu).square()) / (2 * sigma_2));
+            };
 
-    Eigen::VectorXd weak_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
-    {
-        switch (marker)
-        {
-        default:
-            throw std::runtime_error("Unknown marker");
-        }
-    }
+            std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
+            {
+              const double sigma_2 = sigma * sigma;
+              const double sigma_4 = sigma_2 * sigma_2;
+              return {
+                // (mu - x)*exp(-((mu - x)**2 + (mu - y)**2)/(2*sigma**2))/(2*pi*sigma**4)
+                (mu - points.row(0).array())*exp(-((mu - points.row(0).array()).square() + (mu - points.row(1).array()).square())/(2.0*sigma_2))/(2.0*M_PI*sigma_4),
+                    // (mu - y)*exp(-((mu - x)**2 + (mu - y)**2)/(2*sigma**2))/(2*pi*sigma**4)
+                    (mu - points.row(1).array())*exp(-((mu - points.row(0).array()).square() + (mu - points.row(1).array()).square())/(2.0*sigma_2))/(2.0*M_PI*sigma_4)
+              };
+            }
+        };
+        // ***************************************************************************
 
-    Eigen::VectorXd exact_solution(const Eigen::MatrixXd &points) const
-    {
-        return power * (1.0 - cos(exp(-c / (points.row(0).array() + eps)) * s)) *
-               (1.0 - cos(exp(-c / (points.row(1).array() + eps)) * s));
-    };
-
-    std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
-    {
-      // u_x = -c*p*s*(cos(s*exp(-c/(e + y))) - 1)*exp(-c/(e + x))*sin(s*exp(-c/(e + x)))/(e + x)**2
-      // u_y = -c*p*s*(cos(s*exp(-c/(e + x))) - 1)*exp(-c/(e + y))*sin(s*exp(-c/(e + y)))/(e + y)**2
-
-        return {
-          power * sin(exp(-c / (points.row(0).array() + eps)) * s) *
-                    (1.0 - cos(exp(-c / (points.row(1).array() + eps)) * s)) * s *
-                    exp(-c / (points.row(0).array() + eps)) * c / (points.row(0).array() + eps).square(),
-
-                power * sin(exp(-c / (points.row(1).array() + eps)) * s) *
-                    (1.0 - cos(exp(-c / (points.row(0).array() + eps)) * s)) * s *
-                    exp(-c / (points.row(1).array() + eps)) * c / (points.row(1).array() + eps).square(),
-
-                Eigen::VectorXd::Zero(points.cols())};
-    }
-};
-// ***************************************************************************
-
-} // namespace test
-} // namespace Elliptic_PCC_2D
-} // namespace examples
+      } // namespace test
+    } // namespace Elliptic_PCC_2D
+  } // namespace examples
 } // namespace Polydim
 
 #endif
