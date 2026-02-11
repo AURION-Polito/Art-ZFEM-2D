@@ -423,6 +423,9 @@ struct Computational_Comparison final : public I_Test
         Eigen::VectorXd lap(n);
         lap.setZero();
 
+        Eigen::VectorXd check_lap(n);
+        check_lap.setZero();
+
         for (Eigen::Index i = 0; i < n; ++i)
         {
             const double x = points(0, i);
@@ -458,9 +461,30 @@ struct Computational_Comparison final : public I_Test
 
             // Laplacian: Δu = p [F''(x) G(y) + F(x) G''(y)]
             lap(i) = power * (Fxx * Gy + Fx * Gyy);
+
+
+
+
+            // Check
+            // c*p*s*(-(e + x)**4*(cos(s*exp(-c/(e + x))) - 1)*(c*s*cos(s*exp(-c/(e + y))) + c*exp(c/(e + y))*sin(s*exp(-c/(e + y))) - 2*(e + y)*exp(c/(e + y))*sin(s*exp(-c/(e + y))))*exp(2*c/(e + x)) - (e + y)**4*(cos(s*exp(-c/(e + y))) - 1)*(c*s*cos(s*exp(-c/(e + x))) + c*exp(c/(e + x))*sin(s*exp(-c/(e + x))) - 2*(e + x)*exp(c/(e + x))*sin(s*exp(-c/(e + x))))*exp(2*c/(e + y)))*exp(-2*c*(2*e + x + y)/((e + x)*(e + y)))/((e + x)**4*(e + y)**4)
+            check_lap(i) = c * power * s * (
+                             -xb4*(cos(s*exp(-c/(eps + x))) - 1) *
+                             (c*s*cos(s*exp(-c/(eps + y))) +
+                              c*exp(c/(eps + y))*sin(s*exp(-c/(eps + y))) -
+                              2.0*(eps + y)*exp(c/(eps + y))*sin(s*exp(-c/(eps + y)))) *
+                             exp(2.0*c/(eps + x)) - yb4*(cos(s*exp(-c/(eps + y))) - 1) *
+                             (c*s*cos(s*exp(-c/(eps + x))) + c*exp(c/(eps + x))*sin(s*exp(-c/(eps + x))) -
+                              2.0*(eps + x)*exp(c/(eps + x))*sin(s*exp(-c/(eps + x))))*exp(2*c/(eps + y))) *
+                           exp(-2.0*c*(2*eps + x + y)/((eps + x)*(eps + y)))/(xb4*yb4);
+
+            //double max_check = std::max(abs(lap(i)), abs(check_lap(i)));
+            //if (max_check == 0.0)
+            //  max_check = 1.0;
+            //assert(abs(check_lap(i) - lap(i)) < 1.0e-15 * max_check);
         }
 
-        return -lap;
+        //return -lap;
+        return -check_lap;
     };
 
     Eigen::VectorXd strong_boundary_condition(const unsigned int marker, const Eigen::MatrixXd &points) const
@@ -488,7 +512,11 @@ struct Computational_Comparison final : public I_Test
 
     std::array<Eigen::VectorXd, 3> exact_derivative_solution(const Eigen::MatrixXd &points) const
     {
-        return {power * sin(exp(-c / (points.row(0).array() + eps)) * s) *
+      // u_x = -c*p*s*(cos(s*exp(-c/(e + y))) - 1)*exp(-c/(e + x))*sin(s*exp(-c/(e + x)))/(e + x)**2
+      // u_y = -c*p*s*(cos(s*exp(-c/(e + x))) - 1)*exp(-c/(e + y))*sin(s*exp(-c/(e + y)))/(e + y)**2
+
+        return {
+          power * sin(exp(-c / (points.row(0).array() + eps)) * s) *
                     (1.0 - cos(exp(-c / (points.row(1).array() + eps)) * s)) * s *
                     exp(-c / (points.row(0).array() + eps)) * c / (points.row(0).array() + eps).square(),
 
