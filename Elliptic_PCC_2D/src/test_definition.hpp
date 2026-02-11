@@ -477,6 +477,8 @@ struct Computational_Comparison final : public I_Test
                               2.0*(eps + x)*exp(c/(eps + x))*sin(s*exp(-c/(eps + x))))*exp(2*c/(eps + y))) *
                            exp(-2.0*c*(2*eps + x + y)/((eps + x)*(eps + y)))/(xb4*yb4);
 
+            assert(!std::isnan(check_lap(i)));
+
             //double max_check = std::max(abs(lap(i)), abs(check_lap(i)));
             //if (max_check == 0.0)
             //  max_check = 1.0;
