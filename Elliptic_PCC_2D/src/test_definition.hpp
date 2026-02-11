@@ -367,7 +367,7 @@ struct Computational_Comparison final : public I_Test
     {
         eps = 1.0e-13;
         c = 2.0;
-        s = (0.5 * M_PI) * exp(c);
+        s = (0.5 * M_PI) / exp(-c);
         power = 20.0;
     }
 
@@ -402,19 +402,19 @@ struct Computational_Comparison final : public I_Test
     std::array<Eigen::VectorXd, 9> diffusion_term(const Eigen::MatrixXd &points) const
     {
         return {Eigen::VectorXd::Constant(points.cols(), 1.0),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
                 Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Constant(points.cols(), 0.0),
+                Eigen::VectorXd::Zero(points.cols()),
+                Eigen::VectorXd::Zero(points.cols()),
                 Eigen::VectorXd::Constant(points.cols(), 1.0),
                 Eigen::VectorXd::Zero(points.cols()),
                 Eigen::VectorXd::Zero(points.cols()),
                 Eigen::VectorXd::Zero(points.cols()),
-                Eigen::VectorXd::Constant(points.cols(), 0.0)};
+                Eigen::VectorXd::Zero(points.cols())};
     };
 
     Eigen::VectorXd reaction_term(const Eigen::MatrixXd &points) const
     {
-        return points.row(0).array() * points.row(1).array();
+        return Eigen::VectorXd::Zero(points.cols());
     };
 
     Eigen::VectorXd source_term(const Eigen::MatrixXd &points) const
