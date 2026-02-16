@@ -217,21 +217,19 @@ int main(int argc, char **argv)
 
         switch (config.SolverType())
         {
-          case Polydim::examples::Elliptic_PCC_2D::Program_Configuration::Solver_Types::PCG:
-          {
+        case Polydim::examples::Elliptic_PCC_2D::Program_Configuration::Solver_Types::PCG: {
             const auto start_time_solver = Gedim::Profiler::GetTime();
             if (dofs_data.NumberDOFs > 0)
             {
-                 Gedim::Eigen_PCGSolver<> solver;
-                 solver.Initialize(assembler_data.globalMatrixA, { dofs_data.NumberDOFs, 1.0e-15 });
-                 solver_data = solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
+                Gedim::Eigen_PCGSolver<> solver;
+                solver.Initialize(assembler_data.globalMatrixA, {dofs_data.NumberDOFs, 1.0e-15});
+                solver_data = solver.Solve(assembler_data.rightHandSide, assembler_data.solution);
             }
             const auto end_time_solver = Gedim::Profiler::GetTime();
             time_solver += Gedim::Profiler::ComputeTime(start_time_solver, end_time_solver);
-          }
-            break;
-          case Polydim::examples::Elliptic_PCC_2D::Program_Configuration::Solver_Types::Cholesky:
-          {
+        }
+        break;
+        case Polydim::examples::Elliptic_PCC_2D::Program_Configuration::Solver_Types::Cholesky: {
             const auto start_time_solver = Gedim::Profiler::GetTime();
             if (dofs_data.NumberDOFs > 0)
             {
@@ -241,9 +239,9 @@ int main(int argc, char **argv)
             }
             const auto end_time_solver = Gedim::Profiler::GetTime();
             time_solver += Gedim::Profiler::ComputeTime(start_time_solver, end_time_solver);
-          }
-            break;
-          default:
+        }
+        break;
+        default:
             throw std::runtime_error("Unknown solver type");
         }
     }
@@ -263,23 +261,22 @@ int main(int argc, char **argv)
     Gedim::Profiler::StopTime("ComputeErrors");
     Gedim::Output::PrintStatusProgram("ComputeErrors");
 
-
     if (config.ExportMatrix())
     {
-      Gedim::Output::PrintGenericMessage("ExportMatrix...", true);
-      Gedim::Profiler::StartTime("ExportMatrix");
+        Gedim::Output::PrintGenericMessage("ExportMatrix...", true);
+        Gedim::Profiler::StartTime("ExportMatrix");
 
-      std::string s;
-      std::ostringstream str(s);
-      str.precision(6);
-      str << std::scientific << post_process_data.mesh_size;
+        std::string s;
+        std::ostringstream str(s);
+        str.precision(6);
+        str << std::scientific << post_process_data.mesh_size;
 
-      assembler_data.globalMatrixA.ToBinaryFile(exportSolutionFolder + "/Matrix_" + std::to_string(TEST_ID) + "_" +
-                                                std::to_string(Method_ID) + "_" + std::to_string(config.MethodOrder()) +
-                                                "_" + str.str() + ".txt");
+        assembler_data.globalMatrixA.ToBinaryFile(exportSolutionFolder + "/Matrix_" + std::to_string(TEST_ID) + "_" +
+                                                  std::to_string(Method_ID) + "_" +
+                                                  std::to_string(config.MethodOrder()) + "_" + str.str() + ".txt");
 
-      Gedim::Profiler::StopTime("ExportMatrix");
-      Gedim::Output::PrintStatusProgram("ExportMatrix");
+        Gedim::Profiler::StopTime("ExportMatrix");
+        Gedim::Output::PrintStatusProgram("ExportMatrix");
     }
 
     Gedim::Output::PrintGenericMessage("ExportSolution...", true);

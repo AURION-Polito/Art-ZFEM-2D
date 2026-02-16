@@ -13,10 +13,10 @@
 #define __program_utilities_H
 
 #include "DOFsManager.hpp"
+#include "ILinearSolver.hpp"
 #include "assembler.hpp"
 #include "program_configuration.hpp"
 #include "test_definition.hpp"
-#include "ILinearSolver.hpp"
 
 namespace Polydim
 {
@@ -43,7 +43,7 @@ void export_solution(const Polydim::examples::Elliptic_PCC_2D::Program_Configura
                      const Polydim::examples::Elliptic_PCC_2D::Assembler::PostProcess_Data &post_process_data,
                      const double &time_assembler,
                      const double &time_solver,
-                     const Gedim::ILinearSolver::SolutionInfo& solver_info,
+                     const Gedim::ILinearSolver::SolutionInfo &solver_info,
                      const std::string &exportSolutionFolder,
                      const std::string &exportVtuFolder);
 

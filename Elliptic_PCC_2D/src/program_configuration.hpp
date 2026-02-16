@@ -27,8 +27,8 @@ struct Program_Configuration final
 {
     enum struct Solver_Types
     {
-      Cholesky = 0,
-      PCG = 1
+        Cholesky = 0,
+        PCG = 1
     };
 
     Program_Configuration()
@@ -71,9 +71,10 @@ struct Program_Configuration final
                                            static_cast<unsigned int>(1),
                                            "Number of code execution to compute computational time (Default: 1)");
 
-        Gedim::Configurations::AddProperty("SolverType",
-                                           static_cast<unsigned int>(Polydim::examples::Elliptic_PCC_2D::Program_Configuration::Solver_Types::Cholesky),
-                                           "Solver Type 0 - Cholesky; 1 - PCG (Default: 0)");
+        Gedim::Configurations::AddProperty(
+            "SolverType",
+            static_cast<unsigned int>(Polydim::examples::Elliptic_PCC_2D::Program_Configuration::Solver_Types::Cholesky),
+            "Solver Type 0 - Cholesky; 1 - PCG (Default: 0)");
     }
 
     inline std::string ExportFolder() const

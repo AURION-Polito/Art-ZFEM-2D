@@ -40,3 +40,13 @@ release
 .venv
 .idea
 
+# Unzipped Mesh
+Mesh/2D/*/*/M1/
+Mesh/2D/*/*/M2/
+Mesh/2D/*/*/M3/
+Mesh/2D/*/*/M4/
+Mesh/2D/*/*/M5/
+
+
+
+

@@ -361,7 +361,7 @@ if __name__ == "__main__":
             if remove_folder:
                 os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-        plot_errors(list_errors, list_errors_fem, method_order, method_types, True, False)
+        plot_errors(list_errors, list_errors_fem, method_order, method_types, False, False)
 
     test_type = 5
     mesh_generator = 4
@@ -397,7 +397,7 @@ if __name__ == "__main__":
             if remove_folder:
                 os.system("rm -rf " + os.path.join(program_folder, export_path))
 
-        plot_errors(list_errors, list_errors_fem, method_order, method_types, True, False)
+        plot_errors(list_errors, list_errors_fem, method_order, method_types, False, False)
 
 
     if remove_folder:

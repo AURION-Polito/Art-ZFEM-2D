@@ -77,9 +77,9 @@ void create_domain_mesh(const Polydim::examples::Elliptic_PCC_2D::Program_Config
 
     if (config.CheckMesh())
     {
-    Gedim::MeshUtilities::CheckMesh2DConfiguration configuration;
-    configuration.Cell2D_CheckConvexity = false;
-    meshUtilities.CheckMesh2D(configuration, geometryUtilities, mesh);
+        Gedim::MeshUtilities::CheckMesh2DConfiguration configuration;
+        configuration.Cell2D_CheckConvexity = false;
+        meshUtilities.CheckMesh2D(configuration, geometryUtilities, mesh);
     }
 }
 // ***************************************************************************
@@ -162,7 +162,7 @@ void export_solution(const Polydim::examples::Elliptic_PCC_2D::Program_Configura
                      const Polydim::examples::Elliptic_PCC_2D::Assembler::PostProcess_Data &post_process_data,
                      const double &time_assembler,
                      const double &time_solver,
-                     const Gedim::ILinearSolver::SolutionInfo& solver_info,
+                     const Gedim::ILinearSolver::SolutionInfo &solver_info,
                      const std::string &exportSolutionFolder,
                      const std::string &exportVtuFolder)
 {
