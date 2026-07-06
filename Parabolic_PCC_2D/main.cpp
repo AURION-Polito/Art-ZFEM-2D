@@ -10,6 +10,7 @@
 // This file can be used citing references in CITATION.cff file.
 
 #include "Eigen_CholeskySolver.hpp"
+#include "Eigen_LUSolver.hpp"
 #include "MeshMatricesDAO_mesh_connectivity_data.hpp"
 #include "VTKUtilities.hpp"
 #include "program_utilities.hpp"
@@ -260,12 +261,11 @@ int main(int argc, char **argv)
         Gedim::Eigen_SparseArray<> global_lhs;
         Gedim::Eigen_Array<> global_rhs;
 
-        global_lhs.SetSize(dofs_data.NumberDOFs, dofs_data.NumberDOFs, Gedim::ISparseArray::SparseArrayTypes::Symmetric);
+        global_lhs.SetSize(dofs_data.NumberDOFs, dofs_data.NumberDOFs, Gedim::ISparseArray::SparseArrayTypes::None);
         global_rhs.SetSize(dofs_data.NumberDOFs);
 
         global_lhs = theta_parameter * delta_time * assembler_data.globalMatrixA;
         global_lhs += assembler_data.globalMatrixM;
-
         assembler_data.initial_rightHandSide.SubtractionMultiplication(assembler_data.initial_globalMatrixA,
                                                                        assembler_data.initial_solution);
         assembler_data.initial_rightHandSide *= (1 - theta_parameter);
@@ -280,7 +280,7 @@ int main(int argc, char **argv)
 
         if (dofs_data.NumberDOFs > 0)
         {
-            Gedim::Eigen_CholeskySolver solver;
+            Gedim::Eigen_LUSolver solver;
             solver.Initialize(global_lhs);
             solver.Solve(global_rhs, assembler_data.solution);
         }

@@ -13,7 +13,6 @@
 #define __program_utilities_H
 
 #include "DOFsManager.hpp"
-#include "ILinearSolver.hpp"
 #include "assembler.hpp"
 #include "program_configuration.hpp"
 #include "test_definition.hpp"

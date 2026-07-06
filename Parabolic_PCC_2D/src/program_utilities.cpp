@@ -22,6 +22,8 @@ namespace Parabolic_PCC_2D
 
 unsigned int Polydim::examples::Parabolic_PCC_2D::test::Patch_Test::time_order;
 unsigned int Polydim::examples::Parabolic_PCC_2D::test::Patch_Test::space_order;
+unsigned int Polydim::examples::Parabolic_PCC_2D::test::Convergence_in_space::time_order;
+unsigned int Polydim::examples::Parabolic_PCC_2D::test::Convergence_in_time::space_order;
 
 namespace program_utilities
 {
@@ -32,9 +34,16 @@ std::unique_ptr<Polydim::examples::Parabolic_PCC_2D::test::I_Test> create_test(c
     switch (config.TestType())
     {
     case Polydim::examples::Parabolic_PCC_2D::test::Test_Types::Patch_Test:
-        Polydim::examples::Parabolic_PCC_2D::test::Patch_Test::time_order = (config.ThetaParameter() - 0.5) < 1.0e-12 ? 2 : 1;
+        Polydim::examples::Parabolic_PCC_2D::test::Patch_Test::time_order = abs(config.ThetaParameter() - 0.5) < 1.0e-12 ? 2 : 1;
         Polydim::examples::Parabolic_PCC_2D::test::Patch_Test::space_order = config.MethodOrder();
         return std::make_unique<Polydim::examples::Parabolic_PCC_2D::test::Patch_Test>();
+    case Polydim::examples::Parabolic_PCC_2D::test::Test_Types::Convergence_in_space:
+        Polydim::examples::Parabolic_PCC_2D::test::Convergence_in_space::time_order =
+            abs(config.ThetaParameter() - 0.5) < 1.0e-12 ? 2 : 1;
+        return std::make_unique<Polydim::examples::Parabolic_PCC_2D::test::Convergence_in_space>();
+    case Polydim::examples::Parabolic_PCC_2D::test::Test_Types::Convergence_in_time:
+        Polydim::examples::Parabolic_PCC_2D::test::Convergence_in_time::space_order = config.MethodOrder();
+        return std::make_unique<Polydim::examples::Parabolic_PCC_2D::test::Convergence_in_time>();
     default:
         throw std::runtime_error("Test type " + std::to_string((unsigned int)config.TestType()) + " not supported");
     }
@@ -299,9 +308,7 @@ void export_solution(const Polydim::examples::Parabolic_PCC_2D::Program_Configur
         errorFile.close();
     }
 
-    if (config.PostProcess())
     {
-
         Gedim::VTKUtilities exporter;
         exporter.AddPolygons(mesh.Cell0DsCoordinates(),
                              mesh.Cell2DsVertices(),

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def run_program(program_folder,
+                export_folder,
                 program_path,
                 run_folder,
                 method_type,
@@ -51,7 +52,7 @@ def run_program(program_folder,
     run_label += " NumRefinement {0}".format(num_ref)
     print("Run " + run_label + "...")
     os.system(program_path + " " + program_parameters + " > " + output_file)
-    os.system("mv " + output_file + " " + export_path)
+    os.system("mv " + output_file + " " + str(export_path))
     print("Run SUCCESS")
 
     return export_path
@@ -110,11 +111,11 @@ def test_errors(errors,
         assert abs(errors[1][4]) < tol * abs(errors[1][6])
     else:
         errors = np.array(errors[1:])
-        slope_L2 = np.polyfit(np.log(errors[:, 0]), np.log(errors[:, 3]), 1)[0]
-        slope_H1 = np.polyfit(np.log(errors[:, 0]), np.log(errors[:, 4]), 1)[0]
-        print("Num. Ref. ", str(num_rows-1), ": ", slope_L2*(-2), slope_H1*(-2))
-        assert round(slope_L2*(-2)) == round(float(method_order + 1.0))
-        assert round(slope_H1*(-2)) == round(float(method_order))
+        slope_l2 = float(np.polyfit(np.log(errors[:, 0]), np.log(errors[:, 3]), 1)[0])
+        slope_h1 = float(np.polyfit(np.log(errors[:, 0]), np.log(errors[:, 4]), 1)[0])
+        print("Num. Ref. ", str(num_rows-1), ": ", slope_l2*(-2), slope_h1*(-2))
+        assert round(slope_l2*(-2)) == round(float(method_order + 1.0))
+        assert round(slope_h1*(-2)) == round(float(method_order))
 
 def loglog_slope_triangle(ax, x, y, alpha):
 
@@ -138,9 +139,11 @@ def loglog_slope_triangle(ax, x, y, alpha):
 
 
 
-def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_errors, plot_time):
+def plot_errors(export_folder, list_errors, list_errors_fem,
+                method_order, method_types, test_type,
+                name_test, plot_error, plot_time):
 
-    if plot_errors:
+    if plot_error:
         fig, ax = plt.subplots(figsize=(12, 12))
 
         errors = list_errors_fem[method_order - 1]
@@ -232,8 +235,7 @@ def plot_errors(list_errors, list_errors_fem, method_order, method_types, plot_e
         plt.tight_layout()
         plt.show()
 
-
-if __name__ == "__main__":
+def main():
     program_folder = os.path.dirname(os.path.realpath(__file__))
     program_path = os.path.join(".", program_folder, "Elliptic_PCC_DFN")
 
@@ -253,6 +255,7 @@ if __name__ == "__main__":
     for method_type in method_types:
         for method_order in method_orders:
             export_path = run_program(program_folder,
+                                      export_folder,
                                       program_path,
                                       "Run_MG{0}".format(mesh_generator),
                                       method_type,
@@ -268,7 +271,7 @@ if __name__ == "__main__":
                         tol)
 
             if remove_folder:
-                os.system("rm -rf " + os.path.join(program_folder, export_path))
+                os.system("rm -rf " + os.path.join(str(program_folder), str(export_path)))
 
     test_type = 4
     mesh_generator = 0
@@ -278,6 +281,7 @@ if __name__ == "__main__":
     for method_type in method_types:
         for method_order in method_orders:
             export_path = run_program(program_folder,
+                                      export_folder,
                                       program_path,
                                       "Run_MG{0}".format(mesh_generator),
                                       method_type,
@@ -293,7 +297,7 @@ if __name__ == "__main__":
                         tol)
 
             if remove_folder:
-                os.system("rm -rf " + os.path.join(program_folder, export_path))
+                os.system("rm -rf " + os.path.join(str(program_folder), str(export_path)))
 
     test_type = 5
     mesh_generator = 4
@@ -305,6 +309,7 @@ if __name__ == "__main__":
         for mesh_size in [1, 2, 3, 4, 5]:
             mesh_import_path = mesh_import_paths[0] + "/M" + str(mesh_size)
             export_path = run_program(program_folder,
+                                      export_folder,
                                       program_path,
                                       "Run_MG{0}".format(mesh_generator),
                                       method_type,
@@ -325,7 +330,7 @@ if __name__ == "__main__":
         list_errors_fem.append(np.array(errors[1:]))
 
         if remove_folder:
-            os.system("rm -rf " + os.path.join(program_folder, export_path))
+            os.system("rm -rf " + os.path.join(str(program_folder), str(export_path)))
 
     test_type = 5
     mesh_generator = 4
@@ -339,6 +344,7 @@ if __name__ == "__main__":
             for mesh_size in [1, 2, 3, 4, 5]:
                 mesh_import_path = mesh_import_paths[0] + "/M" + str(mesh_size)
                 export_path = run_program(program_folder,
+                                          export_folder,
                                           program_path,
                                           "Run_{1}_MG{0}".format(mesh_generator, name_test),
                                           method_type,
@@ -359,9 +365,9 @@ if __name__ == "__main__":
                             tol)
 
             if remove_folder:
-                os.system("rm -rf " + os.path.join(program_folder, export_path))
+                os.system("rm -rf " + os.path.join(str(program_folder), str(export_path)))
 
-        plot_errors(list_errors, list_errors_fem, method_order, method_types, False, False)
+        plot_errors(export_folder, list_errors, list_errors_fem, method_order, method_types, test_type, name_test, False, False)
 
     test_type = 5
     mesh_generator = 4
@@ -375,15 +381,16 @@ if __name__ == "__main__":
             for mesh_size in [1,2,3,4,5]:
                 mesh_import_path = mesh_import_paths[0] + "/M" + str(mesh_size)
                 export_path = run_program(program_folder,
-                                        program_path,
-                                        "Run_{1}_MG{0}".format(mesh_generator, name_test),
-                                        method_type,
-                                        method_order,
-                                        test_type,
-                                        mesh_generator,
-                                        num_ref = mesh_size,
-                                        num_code_executions = 1,
-                                        mesh_import_path=mesh_import_path)
+                                          export_folder,
+                                          program_path,
+                                          "Run_{1}_MG{0}".format(mesh_generator, name_test),
+                                          method_type,
+                                          method_order,
+                                          test_type,
+                                          mesh_generator,
+                                          num_ref = mesh_size,
+                                          num_code_executions = 1,
+                                          mesh_import_path=mesh_import_path)
 
             errors = import_errors(export_path, method_type, method_order, test_type)
 
@@ -395,12 +402,15 @@ if __name__ == "__main__":
             list_errors.append(np.array(errors[1:]))
 
             if remove_folder:
-                os.system("rm -rf " + os.path.join(program_folder, export_path))
+                os.system("rm -rf " + os.path.join(str(program_folder), str(export_path)))
 
-        plot_errors(list_errors, list_errors_fem, method_order, method_types, False, False)
+        plot_errors(export_folder, list_errors, list_errors_fem, method_order, method_types, test_type, name_test, False, False)
 
 
     if remove_folder:
         os.system("rm -rf " + os.path.join(program_folder, export_folder))
 
     print("TESTS SUCCESS")
+
+if __name__ == "__main__":
+    main()
