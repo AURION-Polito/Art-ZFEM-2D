@@ -6,14 +6,16 @@ This C++ code generates examples published in "The Zipped Finite Element Method:
 If you use this code and the related data in your academic projects, please consider citing the original paper using the following BibTeX entry:
 
 ```
-@misc{berrone2025zippedfiniteelementmethod,
-      title={The Zipped Finite Element Method: High-order Shape Functions for Polygons}, 
-      author={Stefano Berrone and Lorenzo Neva and Moreno Pintore and Gioana Teora and Fabio Vicini},
-      year={2025},
-      eprint={2511.21302},
-      archivePrefix={arXiv},
-      primaryClass={math.NA},
-      url={https://arxiv.org/abs/2511.21302}, 
+@article{BERRONE2026119060,
+title = {The Zipped Finite Element Method: High-order shape functions for polygons},
+journal = {Computer Methods in Applied Mechanics and Engineering},
+volume = {458},
+pages = {119060},
+year = {2026},
+issn = {0045-7825},
+doi = {https://doi.org/10.1016/j.cma.2026.119060},
+url = {https://www.sciencedirect.com/science/article/pii/S0045782526003336},
+author = {Stefano Berrone and Lorenzo Neva and Moreno Pintore and Gioana Teora and Fabio Vicini}
 }
 ```
 
