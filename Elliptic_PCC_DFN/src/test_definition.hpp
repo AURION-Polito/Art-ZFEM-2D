@@ -89,7 +89,7 @@ struct Patch_Test final : public I_Test
             throw std::runtime_error("Unknown domain position");
 
         return Eigen::VectorXd::Constant(points.cols(), 1.0);
-    };
+    }
 
     Eigen::VectorXd source_term(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -104,7 +104,7 @@ struct Patch_Test final : public I_Test
             source_term.array() *= polynomial;
 
         return -source_term;
-    };
+    }
 
     Eigen::VectorXd strong_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -121,7 +121,7 @@ struct Patch_Test final : public I_Test
             result.array() *= polynomial;
 
         return result;
-    };
+    }
 
     Eigen::VectorXd weak_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -162,7 +162,7 @@ struct Patch_Test final : public I_Test
             result.array() *= polynomial;
 
         return result;
-    };
+    }
 
     std::array<Eigen::VectorXd, 3> exact_derivative_solution(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -217,7 +217,7 @@ struct Elliptic_Polynomial_Problem final : public I_Test
 
         const double k = 1.0;
         return Eigen::VectorXd::Constant(points.cols(), k);
-    };
+    }
 
     Eigen::VectorXd source_term(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -226,7 +226,7 @@ struct Elliptic_Polynomial_Problem final : public I_Test
 
         return 32.0 * (points.row(1).array() * (1.0 - points.row(1).array()) +
                        points.row(0).array() * (1.0 - points.row(0).array()));
-    };
+    }
 
     Eigen::VectorXd strong_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -239,7 +239,7 @@ struct Elliptic_Polynomial_Problem final : public I_Test
         return 16.0 * (points.row(1).array() * (1.0 - points.row(1).array()) * points.row(0).array() *
                        (1.0 - points.row(0).array())) +
                1.1;
-    };
+    }
 
     Eigen::VectorXd weak_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -265,7 +265,7 @@ struct Elliptic_Polynomial_Problem final : public I_Test
         return 16.0 * (points.row(1).array() * (1.0 - points.row(1).array()) * points.row(0).array() *
                        (1.0 - points.row(0).array())) +
                1.1;
-    };
+    }
 
     std::array<Eigen::VectorXd, 3> exact_derivative_solution(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -315,7 +315,7 @@ struct Elliptic_Problem final : public I_Test
 
         const double k = 2.0;
         return Eigen::VectorXd::Constant(points.cols(), k);
-    };
+    }
 
     Eigen::VectorXd source_term(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -324,7 +324,7 @@ struct Elliptic_Problem final : public I_Test
 
         return 16.0 * std::numbers::pi * std::numbers::pi * sin(2.0 * std::numbers::pi * points.row(0).array()) *
                sin(2.0 * std::numbers::pi * points.row(1).array());
-    };
+    }
 
     Eigen::VectorXd strong_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -335,7 +335,7 @@ struct Elliptic_Problem final : public I_Test
             throw std::runtime_error("Unknown marker");
 
         return exact_solution(domain_position, points);
-    };
+    }
 
     Eigen::VectorXd weak_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -355,7 +355,7 @@ struct Elliptic_Problem final : public I_Test
             throw std::runtime_error("Unknown domain position");
 
         return sin(2.0 * std::numbers::pi * points.row(0).array()) * sin(2.0 * std::numbers::pi * points.row(1).array());
-    };
+    }
 
     std::array<Eigen::VectorXd, 3> exact_derivative_solution(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -429,7 +429,7 @@ struct Patch_Test_Rotated final : public I_Test
             throw std::runtime_error("Unknown domain position");
 
         return Eigen::VectorXd::Constant(points.cols(), 1.0);
-    };
+    }
 
     Eigen::VectorXd source_term(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -447,7 +447,7 @@ struct Patch_Test_Rotated final : public I_Test
             source_term.array() *= polynomial;
 
         return -source_term;
-    };
+    }
 
     Eigen::VectorXd strong_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -458,7 +458,7 @@ struct Patch_Test_Rotated final : public I_Test
             throw std::runtime_error("Unknown marker");
 
         return exact_solution(domain_position, points);
-    };
+    }
 
     Eigen::VectorXd weak_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -493,7 +493,7 @@ struct Patch_Test_Rotated final : public I_Test
             result.array() *= polynomial;
 
         return result;
-    };
+    }
 
     std::array<Eigen::VectorXd, 3> exact_derivative_solution(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -599,7 +599,7 @@ struct DFN_Frac_3 final : public I_Test
             throw std::runtime_error("Unknown domain position");
 
         return Eigen::VectorXd::Constant(points.cols(), 1.0);
-    };
+    }
 
     Eigen::VectorXd source_term(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
@@ -647,7 +647,7 @@ struct DFN_Frac_3 final : public I_Test
         }
 
         return -1.0 * result;
-    };
+    }
 
     Eigen::VectorXd strong_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -658,7 +658,7 @@ struct DFN_Frac_3 final : public I_Test
             throw std::runtime_error("Unknown marker");
 
         return exact_solution(domain_position, points);
-    };
+    }
 
     Eigen::VectorXd weak_boundary_condition(const unsigned int domain_position, const unsigned int marker, const Eigen::MatrixXd &points) const
     {
@@ -715,7 +715,7 @@ struct DFN_Frac_3 final : public I_Test
         }
 
         return result;
-    };
+    }
 
     std::array<Eigen::VectorXd, 3> exact_derivative_solution(const unsigned int domain_position, const Eigen::MatrixXd &points) const
     {
